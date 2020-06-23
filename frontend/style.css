@@ -1,0 +1,10 @@
+.phone_image {
+    width: 100px;
+    height: 100px;
+}
+#content_table {
+    border-style: groove;
+}
+.element_of_table {
+    border-style: ridge;
+}
