@@ -7,4 +7,5 @@
 }
 .element_of_table {
     border-style: ridge;
+    display: block;
 }

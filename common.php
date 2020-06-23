@@ -8,7 +8,7 @@ class DatabaseConnection
     public function __construct($server_name, $username, $password, $db_name)
     {
         try {
-            $this->connection = new PDO("mysql:host=$server_name;db=$db_name", $username, $password);
+            $this->connection = new PDO("mysql:host=$server_name;dbname=$db_name", $username, $password);
         } catch (Exception $e) {
             die("Can't connect to database");
         }
@@ -22,4 +22,9 @@ class DatabaseConnection
 
         return $response;
     }
+}
+
+function translate($string)
+{
+    return $string;
 }
