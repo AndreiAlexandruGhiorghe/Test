@@ -16,6 +16,7 @@ class DatabaseConnection
 
     public function query($query, $params)
     {
+        //the query has "?" as a placeholder for params
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
         $response = $stmt->fetchAll();
