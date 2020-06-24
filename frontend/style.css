@@ -23,4 +23,7 @@
 .error_field {
     width: 50%;
 }
+.input_type_login {
+    display: block;
+}
 

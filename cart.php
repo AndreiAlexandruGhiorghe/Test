@@ -23,7 +23,6 @@ $comments_field = '';
 //I add the product the cart and the cookie retain it
 if (isset($_GET['id_product'])) {
     unset($my_cart[intval($_GET['id_product'])]);
-    //$my_cart += array(intval($_GET['id_product']) => '0');
     setcookie('my_cart', json_encode($my_cart), time() + 3600);
 }
 
@@ -34,14 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (strlen($name_field) > 18) {
         $name_field_error = 'The name should have maximum 18 characters';
     }
+
     $address_field = strip_tags($_POST['address_field']);
     if (!filter_var($address_field, FILTER_VALIDATE_EMAIL)) {
         $address_field_error = 'Invalid email address';
     }
+
     $comments_field = strip_tags($_POST['comments_field']);
     if ($name_field_error == '' && $address_field_error == '') {
         mail($address_field,translate('Your command'),'Test');
-        echo 'mail sent';
     }
 }
 

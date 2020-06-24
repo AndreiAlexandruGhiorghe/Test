@@ -17,7 +17,5 @@ if (isset($_GET['id_product'])) {
     setcookie('my_cart', json_encode($my_cart), time() +3600);
 }
 
-
-
 //accessing the frontend part of index
 require_once 'frontend/main_page.php';
