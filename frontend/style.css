@@ -8,4 +8,19 @@
 .element_of_table {
     border-style: ridge;
     display: block;
+    border-collapse: collapse;
+    margin: 0px 0px 0px 0px;
 }
+.input_type {
+    width: 500px;
+}
+#comments_section {
+    height: 5em;
+}
+.input_type, .error_field {
+    display: inline;
+}
+.error_field {
+    width: 50%;
+}
+

@@ -27,8 +27,11 @@
             <br>
         <?php endif; ?>
     <?php endfor; ?>
+
 </table>
 <?php ?>
-
+<br>
+<br>
+<a href="cart.php"><?= translate('Go to cart') ?></a>
 </body>
 </html>
