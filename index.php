@@ -11,7 +11,7 @@ $items = $connection->query("Select * from products;", []);
 // or else I just initialise it as an empty array
 $my_cart = isset($_COOKIE['my_cart']) ? json_decode($_COOKIE['my_cart'], true) : [];
 
-//I add the product the cart and the cookie retin it
+//I add the product the cart and the cookie retain it
 if (isset($_GET['id_product'])) {
     $my_cart += array(intval($_GET['id_product']) => '0');
     setcookie('my_cart', json_encode($my_cart), time() +3600);
