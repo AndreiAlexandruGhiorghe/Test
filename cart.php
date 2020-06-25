@@ -2,7 +2,12 @@
 require_once 'config.php';
 require_once 'common.php';
 
-$connection = new DatabaseConnection($server_name, $username, $password, $db_name);
+$connection = new DatabaseConnection(
+    constant('server_name'),
+    constant('username'),
+    constant('password'),
+    constant('db_name')
+);
 
 //in items are the list with all products
 $items = $connection->query("Select * from products;", []);

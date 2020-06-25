@@ -1,5 +1,5 @@
 <?php
-$server_name = 'host name';
-$username = 'username';
-$password = 'password';
-$db_name = 'database name';
+define('server_name', 'host name');
+define('username', 'user\'s username');
+define('password', 'user\'s password');
+define('db_name', 'database name');
