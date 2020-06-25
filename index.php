@@ -32,7 +32,7 @@ if (isset($_POST['id_product'])) {
         <?php if (!isset($my_cart[intval($items[$i]['id'])])): ?>
             <tr class="element_of_table">
                 <td>
-                    <img class="phone_image" src="<?=$items[$i]['image_path'] ?>">
+                    <img class="phone_image" src="<?= $items[$i]['image_path'] ?>">
                 </td>
                 <td>
                     <?= $items[$i]['title'] ?><br>

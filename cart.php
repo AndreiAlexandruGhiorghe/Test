@@ -22,9 +22,11 @@ $comments_field = '';
 
 // I add the product the cart and the cookie retain it
 if (isset($_POST['id_product'])) {
+
     unset($my_cart[intval($_POST['id_product'])]);
     $_SESSION['my_cart'] = $my_cart;
 } elseif (isset($_POST['name_field'])) {
+
     // if I receive name_field that means a have other variables too
     $name_field = strip_tags($_POST['name_field']);
 
@@ -41,7 +43,7 @@ if (isset($_POST['id_product'])) {
 
     $comments_field = strip_tags($_POST['comments_field']);
     if ($name_field_error == '' && $address_field_error == '') {
-        mail($address_field,translate('Your command'),'Test');
+        mail($address_field, translate('Your command'), 'Test');
     }
 }
 ?>
@@ -50,7 +52,7 @@ if (isset($_POST['id_product'])) {
 <head>
     <link rel="stylesheet" type="text/css" href="frontend/style.css">
     <meta charset="UTF-8">
-    <title>Main Page</title>
+    <title> <?= translate('Cart Page') ?> </title>
 </head>
 <body>
 
@@ -61,7 +63,7 @@ if (isset($_POST['id_product'])) {
         <?php if (isset($my_cart[intval($items[$i]['id'])])): ?>
             <tr class="element_of_table">
                 <td>
-                    <img class="phone_image" src="<?= '.' . $items[$i]['image_path'] ?>">
+                    <img class="phone_image" src="<?= $items[$i]['image_path'] ?>">
                 </td>
                 <td>
                     <?= $items[$i]['title'] ?><br>
@@ -81,19 +83,22 @@ if (isset($_POST['id_product'])) {
     <form action="cart.php" method="POST">
         <tr>
             <td>
-                <input class="input_type" type="text" name="name_field" placeholder="<?= translate('Name') ?>" value="<?= translate($name_field) ?>">
+                <input class="input_type" type="text" name="name_field" placeholder="<?= translate('Name') ?>"
+                       value="<?= translate($name_field) ?>">
                 <span class="error_field">* <?= translate($name_field_error) ?></span>
             </td>
         </tr>
         <tr>
             <td>
-                <input class="input_type" type="text" name="address_field" placeholder="<?= translate('Contact deatails')?>" value="<?= translate($address_field) ?>">
+                <input class="input_type" type="text" name="address_field"
+                       placeholder="<?= translate('Contact deatails') ?>" value="<?= translate($address_field) ?>">
                 <span class="error_field">* <?= translate($address_field_error) ?></span>
             </td>
         </tr>
         <tr>
             <td>
-                <textarea id="comments_section" class="input_type" type="text" name="comments_field" placeholder="<?= translate('Comments') ?>"><?= translate($comments_field) ?></textarea>
+                <textarea id="comments_section" class="input_type" type="text" name="comments_field"
+                          placeholder="<?= translate('Comments') ?>"><?= translate($comments_field) ?></textarea>
             </td>
         </tr>
         <tr>
