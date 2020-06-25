@@ -1,5 +1,4 @@
 <?php
-require_once 'config.php';
 require_once 'common.php';
 
 $username_field = '';
@@ -22,12 +21,7 @@ if (isset($_POST['submit_button'])) {
         $password_field_error = translate('Enter a password');
     }
     if ($username_field != '' && $password_field != '') {
-        $connection = new DatabaseConnection(
-            constant('server_name'),
-            constant('username'),
-            constant('password'),
-            constant('db_name')
-        );
+        $connection = databaseConnection();
 
         $users = $connection->query("Select * from accounts where username = ? AND password = ?;", [$username_field, $password_field]);
 
@@ -44,10 +38,24 @@ if (isset($_POST['submit_button'])) {
     }
 
 }
-//echo $username_field;
-//echo $username_field_error;
-//echo $password_field;
-//echo $password_field_error;
-//echo $login_failed_message;
-
-require_once 'frontend/login_page.php';
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login page</title>
+    <link rel="stylesheet" type="text/css" href="frontend/style.css">
+    <meta charset="UTF-8">
+</head>
+<body>
+<form action="login.php" method="POST">
+    <input type="text" class="input_type" name="username_field" placeholder="<?= translate('Username') ?>" value="<?= translate($username_field) ?>">
+    <span class="error_field">* <?= translate($username_field_error) ?></span>
+    <br>
+    <input type="password" class="input_type" name="password_field" placeholder="<?= translate('Password') ?>" value="<?= translate($password_field) ?>">
+    <span class="error_field">* <?= translate($password_field_error) ?></span>
+    <br>
+    <input type="submit" class="input_type_login" name="submit_button" value="<?= translate('Login')?>">
+    <span class="error_field"> <?= translate($login_failed_message) ?> </span>
+</form>
+</body>
+</html>

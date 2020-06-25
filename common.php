@@ -1,31 +1,37 @@
 <?php
+require_once 'config.php';
 
-//database connection
-class DatabaseConnection
+// the initialisation of the translation variable
+$json_file = fread(fopen(constant('TRANSLATION_FILE'),'r'), filesize(constant('TRANSLATION_FILE')));
+$translation = json_decode($json_file, true);
+unset($json_file);
+
+function query($connection, $query, $params): array
 {
-    private $connection;
+    // the query has "?" as a placeholder for params
+    $stmt = $connection->prepare($query);
+    $stmt->execute($params);
+    $response = $stmt->fetchAll();
 
-    public function __construct($server_name, $username, $password, $db_name)
-    {
-        try {
-            $this->connection = new PDO("mysql:host=$server_name;dbname=$db_name", $username, $password);
-        } catch (Exception $e) {
-            die("Can't connect to database");
-        }
-    }
-
-    public function query($query, $params)
-    {
-        //the query has "?" as a placeholder for params
-        $stmt = $this->connection->prepare($query);
-        $stmt->execute($params);
-        $response = $stmt->fetchAll();
-
-        return $response;
-    }
+    return $response;
 }
 
-function translate($string)
+// database connection
+function databaseConnection(): PDO {
+    return new PDO(
+        'mysql:host=' . constant('SERVER_NAME') . ';dbname=' . constant('DB_NAME'),
+        constant('USERNAME'),
+        constant('PASSWORD')
+    );
+}
+
+// Translation function
+function translate($string): string
 {
+    global $translation;
+    if (isset($translation[$string])) {
+        return $translation[$string];
+    }
     return $string;
 }
+

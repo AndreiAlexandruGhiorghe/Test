@@ -1,26 +1,63 @@
 <?php
-require_once 'config.php';
+session_start();
+
 require_once 'common.php';
 
-$connection = new DatabaseConnection(
-    constant('server_name'),
-    constant('username'),
-    constant('password'),
-    constant('db_name')
-);
+$connection = databaseConnection();
 
-//in items are the list with all products
-$items = $connection->query("Select * from products;", []);
+// in items are the list with all products
+$items = query($connection, 'Select * from products;', []);
 
-//when my cookie is set I convert the data to array and assign it to $my_cart
-// or else I just initialise it as an empty array
-$my_cart = isset($_COOKIE['my_cart']) ? json_decode($_COOKIE['my_cart'], true) : [];
+// $my_cart takes the value of my_cart from this session
+$my_cart = isset($_SESSION['my_cart']) ? $_SESSION['my_cart'] : [];
 
-//I add the product the cart and the cookie retain it
-if (isset($_GET['id_product'])) {
-    $my_cart += array(intval($_GET['id_product']) => '0');
-    setcookie('my_cart', json_encode($my_cart), time() +3600);
+// I add the product the cart and I retain it within this session
+if (isset($_POST['id_product'])) {
+    $my_cart += [intval($_POST['id_product']) => '0'];
+    $_SESSION['my_cart'] = $my_cart;
 }
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="frontend/style.css">
+    <meta charset="UTF-8">
+    <title> <?= translate('Main Page') ?> </title>
+</head>
+<body>
 
-//accessing the frontend part of index
-require_once 'frontend/main_page.php';
+<table id="content_table">
+    <tbody>
+    <?php for ($i = 0; $i < count($items); $i++): ?>
+        <?php if (!isset($my_cart[intval($items[$i]['id'])])): ?>
+            <tr class="element_of_table">
+                <td>
+                    <img class="phone_image" src="<?=$items[$i]['image_path'] ?>">
+                </td>
+                <td>
+                    <?= $items[$i]['title'] ?><br>
+                    <?= $items[$i]['description'] ?><br>
+                    <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
+                </td>
+                <td>
+                    <form method="post" action="index.php">
+                        <input type="hidden" name="id_product" value="<?= $items[$i]['id'] ?>">
+                        <a onclick="this.parentNode.submit();"> <?= translate('Add') ?> </a>
+                    </form>
+                </td>
+
+            </tr>
+            <br>
+        <?php endif; ?>
+    <?php endfor; ?>
+    <tr>
+        <td>
+            <form method="post" action="cart.php">
+                <a onclick="this.parentNode.submit();"> <?= translate('Go to cart') ?> </a>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
