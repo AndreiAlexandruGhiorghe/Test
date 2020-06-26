@@ -24,7 +24,6 @@ if (
 }
 
 $items = extract_products($connection, $my_cart, 'outside the cart');
-
 ?>
 <?= doc_type_html() ?>
 <html>

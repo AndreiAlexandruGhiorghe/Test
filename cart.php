@@ -20,6 +20,9 @@ $name_field = '';
 $address_field = '';
 $comments_field = '';
 
+// here we declare the send email variable
+$send_email = 0;
+
 // I add the product the cart and the cookie retain it
 if (isset($_POST['id_product'])) {
 
@@ -58,9 +61,12 @@ if (isset($_POST['id_product'])) {
                     
                     </body>
                     </html>';
-        mail($address_field, translate('Your Cart'), $message, $headers);
+        $send_email = 1;
+        //mail($address_field, translate('Your Cart'), $message, $headers);
+        //$a = sendMail($address_field, 'Hello There!');
     }
 }
+ob_start();
 ?>
 <!DOCTYPE html>
 <html>
@@ -127,3 +133,19 @@ if (isset($_POST['id_product'])) {
 </table>
 </body>
 </html>
+<?php
+if ($send_email) {
+    $html_page = ob_get_clean();
+    mail($address_field,'subject',$html_page);
+
+
+    // get the images as string
+    for ($i = 0; $i < count($items); $i++){
+        $file_size = filesize('./images/SMTG975FZGD_6_03f0d4b6.jpg');
+        $file = fopen('./images/SMTG975FZGD_6_03f0d4b6.jpg', 'r');
+        $file_content = fread($file, $file_size);
+
+    }
+    mail($address_field, translate('Your Cart'), $html_page);
+}
+?>

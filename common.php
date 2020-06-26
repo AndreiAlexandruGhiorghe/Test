@@ -7,6 +7,11 @@ $json_file_content = fread($json_file, filesize(TRANSLATION_FILE));
 $translation = json_decode($json_file_content, true);
 fclose($json_file);
 
+//echo 'file://C:/xamppAndrei/htdocs/Test/images/SMTG975FZGD_6_03f0d4b6.jpg';
+//$aux = filesize('./images/SMTG975FZGD_6_03f0d4b6.jpg');
+//$file = fopen('./images/SMTG975FZGD_6_03f0d4b6.jpg', 'r');
+//echo fread($file, $aux);
+
 function query($connection, $query, $params): array
 {
     // the query has "?" as a placeholder for params
