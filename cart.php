@@ -6,7 +6,7 @@ require_once 'common.php';
 $connection = databaseConnection();
 
 // in items are the list with all products
-$items = query($connection, 'Select * from products;', []);
+$items = query($connection, 'SELECT * FROM products;', []);
 
 // I add the product the cart and I retain it within this session
 $my_cart = isset($_SESSION['my_cart']) ? $_SESSION['my_cart'] : [];
@@ -43,7 +43,22 @@ if (isset($_POST['id_product'])) {
 
     $comments_field = strip_tags($_POST['comments_field']);
     if ($name_field_error == '' && $address_field_error == '') {
-        mail($address_field, translate('Your command'), 'Test');
+        $headers = 'From: ' . SENDER_ADDRESS . '\r\n';
+        $headers .= 'Content-Type: text/html; charset=UTF-8\r\n';
+
+        $message = '<!DOCTYPE html>
+                    <html>
+                    <head>
+                    <title>Page Title</title>
+                    </head>
+                    <body>
+                    
+                    <h1>This is a Heading</h1>
+                    <p>This is a paragraph.</p>
+                    
+                    </body>
+                    </html>';
+        mail($address_field, translate('Your Cart'), $message, $headers);
     }
 }
 ?>
@@ -73,7 +88,7 @@ if (isset($_POST['id_product'])) {
                 <td>
                     <form method="post" action="cart.php">
                         <input type="hidden" name="id_product" value="<?= $items[$i]['id'] ?>">
-                        <a onclick="this.parentNode.submit();"> <?= translate('Remove') ?> </a>
+                        <button type="submit" class="link_button"> <?= translate('Remove') ?> </button>
                     </form>
                 </td>
             </tr>

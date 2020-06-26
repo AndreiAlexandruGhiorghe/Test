@@ -2,26 +2,43 @@
     width: 100px;
     height: 100px;
 }
+
 #content_table {
     border-style: groove;
 }
+
 .element_of_table {
     border-style: ridge;
     display: block;
     border-collapse: collapse;
     margin: 0px 0px 0px 0px;
 }
+
 .input_type {
     width: 150px;
 }
+
 #comments_section {
     height: 5em;
 }
-.input_type, .error_field {
+.input_type,
+.error_field {
     display: inline;
 }
+
 .error_field {
     width: 50%;
     color:red;
 }
 
+.link_button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+}
