@@ -77,12 +77,18 @@ function extract_products($connection, $my_cart, $type_of_product): array
     // the query
     if (count($my_cart)) {
         $query_string = $part_of_the_query . question_marks(count($my_cart)) . ';';
+        $items = query($connection, $query_string, array_keys($my_cart));
     } else {
-        $query_string = 'SELECT * FROM products;';
+        if ($type_of_product == OUTSIDE_CART) {
+            $query_string = 'SELECT * FROM products;';
+            // the interogation to database
+            $items = query($connection, $query_string, array_keys($my_cart));
+        } else {
+            // that means I need the products that are inside the cart
+            // no items I need
+            $items = [];
+        }
     }
-
-    // the interogation to database
-    $items = query($connection, $query_string, array_keys($my_cart));
 
     return $items;
 }

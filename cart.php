@@ -62,25 +62,23 @@ ob_start();
 <table id="content_table">
     <tbody>
     <?php for ($i = 0; $i < count($items); $i++): ?>
-        <?php if (isset($my_cart[intval($items[$i]['id'])])): ?>
-            <tr class="element_of_table">
-                <td>
-                    <img class="phone_image" src="<?= $items[$i]['image_path'] ?>">
-                </td>
-                <td>
-                    <?= $items[$i]['title'] ?><br>
-                    <?= $items[$i]['description'] ?><br>
-                    <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
-                </td>
-                <td>
-                    <form method="post" action="cart.php">
-                        <input type="hidden" name="id_product" value="<?= $items[$i]['id'] ?>">
-                        <button type="submit" class="link_button"> <?= translate('Remove') ?> </button>
-                    </form>
-                </td>
-            </tr>
-            <br>
-        <?php endif; ?>
+        <tr class="element_of_table">
+            <td>
+                <img class="phone_image" src="<?= $items[$i]['image_path'] ?>">
+            </td>
+            <td>
+                <?= $items[$i]['title'] ?><br>
+                <?= $items[$i]['description'] ?><br>
+                <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
+            </td>
+            <td>
+                <form method="post" action="cart.php">
+                    <input type="hidden" name="id_product" value="<?= $items[$i]['id'] ?>">
+                    <button type="submit" class="link_button"> <?= translate('Remove') ?> </button>
+                </form>
+            </td>
+        </tr>
+        <br>
     <?php endfor; ?>
     <form action="cart.php" method="POST">
         <tr>
