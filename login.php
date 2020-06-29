@@ -23,8 +23,11 @@ if (isset($_POST['submit_button'])) {
     if ($username_field != '' && $password_field != '') {
         $connection = databaseConnection();
 
-        $users = $connection->query("Select * from accounts where username = ? AND password = ?;",
-            [$username_field, $password_field]);
+        $users = query(
+                $connection,
+                'Select * from accounts where username = ? AND password = ?;',
+                [$username_field, $password_field]
+        );
 
         if (
             isset($users[0]['username'])
