@@ -1,25 +1,38 @@
 <?php
 require_once 'config.php';
 
-// the initialisation of the translation variable
-$json_file = fopen(TRANSLATION_FILE, 'r');
-$json_file_content = fread($json_file, filesize(TRANSLATION_FILE));
-$translation = json_decode($json_file_content, true);
-fclose($json_file);
+session_start();
 
-//echo 'file://C:/xamppAndrei/htdocs/Test/images/SMTG975FZGD_6_03f0d4b6.jpg';
-//$aux = filesize('./images/SMTG975FZGD_6_03f0d4b6.jpg');
-//$file = fopen('./images/SMTG975FZGD_6_03f0d4b6.jpg', 'r');
-//echo fread($file, $aux);
+// the initialisation of the translation variable
+$json_file = (fopen(TRANSLATION_FILE, 'r') !== false) ? fopen(TRANSLATION_FILE, 'r') : 0;
+
+$json_file_size = (filesize(TRANSLATION_FILE) !== false) ? filesize(TRANSLATION_FILE) : 0;
+
+$json_file_content = (
+    $json_file != 0
+    && fread($json_file, $json_file_size) !== false
+) ? fread($json_file, $json_file_size) : '';
+
+$translation = json_decode($json_file_content, true);
+$translation = ($translation !== null && $translation !== false) ? $translation : [];
+
+fclose($json_file);
 
 function query($connection, $query, $params): array
 {
     // the query has "?" as a placeholder for params
     $stmt = $connection->prepare($query);
-    $stmt->execute($params);
-    $response = $stmt->fetchAll();
+    if ($stmt !== false) {
+        if ($stmt->execute($params)) {
+            $response = $stmt->fetchAll();
+            // if fetchAll returns false then we will return a empty array
+            $response = ($response !== false) ? $response : [];
 
-    return $response;
+            return $response;
+        }
+    }
+    // in case of errors that response will be returned
+    return [];
 }
 
 // database connection
@@ -42,50 +55,34 @@ function translate($string): string
     return $string;
 }
 
-function doc_type_html(): string
-{
-    return '<!DOCTYPE html>';
-}
-
-function extract_keys($assoc_array): array
-{
-    $keys = [];
-    foreach ($assoc_array as $key => $value) {
-        array_push($keys, $key);
-    }
-
-    return $keys;
-}
-
 function question_marks($nr_of_quotes): string
 {
-
     $return_string = '(';
-    for ($i = 0; $i < $nr_of_quotes - 1; $i++) {
-        $return_string .= '?, ';
-    }
-    $return_string .= ($nr_of_quotes) ? '?)' : ')';
+    $return_string .= implode(', ', array_fill(0, $nr_of_quotes, '?'));
+    $return_string .= ')';
 
     return $return_string;
 }
 
+// extract_products it's used whenever I need to list products
+// from inside or outside the cart(index.php, cart.php)
 function extract_products($connection, $my_cart, $type_of_product): array
 {
-    if ($type_of_product == 'inside the cart') {
+    if ($type_of_product == INSIDE_CART) {
         $part_of_the_query = 'SELECT * FROM products WHERE id IN ';
-    } elseif ($type_of_product == 'outside the cart') {
+    } elseif ($type_of_product == OUTSIDE_CART) {
         $part_of_the_query = 'SELECT * FROM products WHERE id NOT IN ';
     }
 
     // the query
     if (count($my_cart)) {
-        $query_string = $part_of_the_query . question_marks(count($my_cart)) .';';
+        $query_string = $part_of_the_query . question_marks(count($my_cart)) . ';';
     } else {
         $query_string = 'SELECT * FROM products;';
     }
 
     // the interogation to database
-    $items = query($connection, $query_string, extract_keys($my_cart));
+    $items = query($connection, $query_string, array_keys($my_cart));
 
     return $items;
 }
