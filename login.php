@@ -28,14 +28,20 @@ if (isset($_POST['submit_button'])) {
                 'Select * from accounts where username = ? AND password = ?;',
                 [$username_field, $password_field]
         );
-
         if (
             isset($users[0]['username'])
             && $users[0]['username'] == $username_field
             && $users[0]['password'] == $password_field
         ) {
-            header('Location: index.php');
+            if ($users[0]['admin'] == true) {
+                $_SESSION['admin'] = true;
+                header('Location: products.php');
+            } else {
+                $_SESSION['admin'] = false;
+                header('Location: index.php');
+            }
             die();
+
         } else {
             $login_failed_message = 'Wrong username or password';
         }
