@@ -1,38 +1,38 @@
-.phone_image {
+.phoneImage {
     width: 100px;
     height: 100px;
 }
 
-#content_table {
+#contentTable {
     border-style: groove;
 }
 
-.element_of_table {
+.elementOfTable {
     border-style: ridge;
     display: block;
     border-collapse: collapse;
     margin: 0px 0px 0px 0px;
 }
 
-.input_type {
+.inputType {
     width: 150px;
 }
 
-#comments_section {
+#commentsSection {
     height: 5em;
 }
 
-.input_type,
-.error_field {
+.inputType,
+.errorField {
     display: inline;
 }
 
-.error_field {
+.errorField {
     width: 50%;
     color:red;
 }
 
-.link_button {
+.linkButton {
     background: none!important;
     border: none;
     padding: 0!important;

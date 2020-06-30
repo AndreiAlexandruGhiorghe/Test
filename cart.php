@@ -4,42 +4,42 @@ require_once 'common.php';
 
 $connection = databaseConnection();
 
-// I take the data that is inside my_cart from session
-$my_cart = isset($_SESSION['my_cart']) ? $_SESSION['my_cart'] : [];
+// I take the data that is inside myCart from session
+$myCart = isset($_SESSION['myCart']) ? $_SESSION['myCart'] : [];
 
 // initialise fields errors
-$name_field_error = '';
-$address_field_error = '';
+$nameField_error = '';
+$addressFieldError = '';
 
 // initialise the input fields
-$input_data = [];
-$input_data['name_field'] = $input_data['address_field'] = $input_data['comments_field'] = '';
+$inputData = [];
+$inputData['nameField'] = $inputData['addressField'] = $inputData['commentsField'] = '';
 
 // I add the product the cart and the cookie retain it
-if (isset($_POST['id_product'])) {
-    unset($my_cart[intval($_POST['id_product'])]);
-    $_SESSION['my_cart'] = $my_cart;
-} elseif (isset($_POST['name_field']) && $_POST['address_field']) {
-    $input_data['name_field'] = $_POST['name_field'];//strip_tags($_POST['name_field']);
-    if (strlen($input_data['name_field']) < 5 || strlen($input_data['name_field']) > 18) {
-        $name_field_error = 'The name should be between 5 and 18 characters.';
+if (isset($_POST['idProduct'])) {
+    unset($myCart[intval($_POST['idProduct'])]);
+    $_SESSION['myCart'] = $myCart;
+} elseif (isset($_POST['nameField']) && $_POST['addressField']) {
+    $inputData['nameField'] = $_POST['nameField'];
+    if (strlen($inputData['nameField']) < 5 || strlen($inputData['nameField']) > 18) {
+        $nameField_error = 'The name should be between 5 and 18 characters.';
     }
 
-    $input_data['address_field'] = strip_tags($_POST['address_field']);
-    if (!filter_var($input_data['address_field'], FILTER_VALIDATE_EMAIL)) {
-        $address_field_error = 'Invalid email address';
+    $inputData['addressField'] = strip_tags($_POST['addressField']);
+    if (!filter_var($inputData['addressField'], FILTER_VALIDATE_EMAIL)) {
+        $addressFieldError = 'Invalid email address';
     }
 
-    $input_data['comments_field'] = strip_tags($_POST['comments_field']);
-    if ($name_field_error == '' && $address_field_error == '') {
-        $_SESSION['input_data'] = $input_data;
+    $inputData['commentsField'] = strip_tags($_POST['commentsField']);
+    if ($nameField_error == '' && $addressFieldError == '') {
+        $_SESSION['inputData'] = $inputData;
         header('Location: cart_mail.php');
         die();
     }
 }
 
 // in items are the list with all products
-$items = extract_products($connection, $my_cart, INSIDE_CART);
+$items = extractProducts($connection, $myCart, INSIDE_CART);
 
 ob_start();
 ?>
@@ -52,12 +52,12 @@ ob_start();
 </head>
 <body>
 
-<table id="content_table">
+<table id="contentTable">
     <tbody>
     <?php for ($i = 0; $i < count($items); $i++): ?>
-        <tr class="element_of_table">
+        <tr class="elementOfTable">
             <td>
-                <img class="phone_image" src="<?= $items[$i]['image_path'] ?>">
+                <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
             </td>
             <td>
                 <?= $items[$i]['title'] ?><br>
@@ -66,8 +66,8 @@ ob_start();
             </td>
             <td>
                 <form method="post" action="cart.php">
-                    <input type="hidden" name="id_product" value="<?= $items[$i]['id'] ?>">
-                    <button type="submit" class="link_button"> <?= translate('Remove') ?> </button>
+                    <input type="hidden" name="idProduct" value="<?= $items[$i]['id'] ?>">
+                    <button type="submit" class="linkButton"> <?= translate('Remove') ?> </button>
                 </form>
             </td>
         </tr>
@@ -76,32 +76,32 @@ ob_start();
     <form action="cart.php" method="POST">
         <tr>
             <td>
-                <input class="input_type" type="text" name="name_field"
+                <input class="inputType" type="text" name="nameField"
                        placeholder="<?= translate('Name') ?>"
-                       value="<?= $input_data['name_field'] ?>">
-                <span class="error_field">* <?= translate($name_field_error) ?></span>
+                       value="<?= $inputData['nameField'] ?>">
+                <span class="errorField">* <?= translate($nameField_error) ?></span>
             </td>
         </tr>
         <tr>
             <td>
-                <input class="input_type" type="text" name="address_field"
+                <input class="inputType" type="text" name="addressField"
                        placeholder="<?= translate('Contact deatails') ?>"
-                       value="<?= $input_data['address_field'] ?>">
-                <span class="error_field">* <?= translate($address_field_error) ?></span>
+                       value="<?= $inputData['addressField'] ?>">
+                <span class="errorField">* <?= translate($addressFieldError) ?></span>
             </td>
         </tr>
         <tr>
             <td>
-            <textarea id="comments_section" class="input_type" type="text" name="comments_field"
+            <textarea id="commentsSection" class="inputType" type="text" name="commentsField"
                       placeholder="<?= translate('Comments') ?>">
-                <?= $input_data['comments_field'] ?>
+                <?= $inputData['commentsField'] ?>
             </textarea>
             </td>
         </tr>
         <tr>
             <td>
                 <a href="index.php"><?= translate('Go to index') ?></a>
-                <input type="submit" name="submit_button" value="Checkout">
+                <input type="submit" name="submitButton" value="Checkout">
             </td>
         </tr>
     </form>

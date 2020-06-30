@@ -14,12 +14,12 @@ $items = query($connection, 'SELECT * FROM products;',[]);
 </head>
 <body>
 
-<table id="content_table">
+<table id="contentTable">
     <tbody>
     <?php for ($i = 0; $i < count($items); $i++): ?>
-            <tr class="element_of_table">
+            <tr class="elementOfTable">
                 <td>
-                    <img class="phone_image" src="<?= $items[$i]['image_path'] ?>">
+                    <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
                 </td>
                 <td>
                     <?= $items[$i]['title'] ?><br>
@@ -28,14 +28,14 @@ $items = query($connection, 'SELECT * FROM products;',[]);
                 </td>
                 <td>
                     <form method="post" action="product.php">
-                        <input type="hidden" name="id_product_edit" value="<?= $items[$i]['id'] ?>">
-                        <button type="submit" class="link_button"> <?= translate('Edit') ?> </button>
+                        <input type="hidden" name="idProductEdit" value="<?= $items[$i]['id'] ?>">
+                        <button type="submit" class="linkButton"> <?= translate('Edit') ?> </button>
                     </form>
                 </td>
                 <td>
                     <form method="post" action="products.php">
-                        <input type="hidden" name="id_product_delete" value="<?= $items[$i]['id'] ?>">
-                        <button type="submit" class="link_button"> <?= translate('Delete') ?> </button>
+                        <input type="hidden" name="idProductDelete" value="<?= $items[$i]['id'] ?>">
+                        <button type="submit" class="linkButton"> <?= translate('Delete') ?> </button>
                     </form>
                 </td>
             </tr>
@@ -44,14 +44,14 @@ $items = query($connection, 'SELECT * FROM products;',[]);
     <tr>
         <td>
             <form method="post" action="product.php">
-                <input type="hidden" name="id_product_edit" value="<?= $items[$i]['id'] ?>">
-                <button type="submit" class="link_button"> <?= translate('Add') ?> </button>
+                <input type="hidden" name="idProductEdit" value="<?= $items[$i]['id'] ?>">
+                <button type="submit" class="linkButton"> <?= translate('Add') ?> </button>
             </form>
         </td>
         <td>
             <form method="post" action="login.php">
-                <input type="hidden" name="id_product_delete" value="<?= $items[$i]['id'] ?>">
-                <button type="submit" class="link_button"> <?= translate('Logout') ?> </button>
+                <input type="hidden" name="idProductDelete" value="<?= $items[$i]['id'] ?>">
+                <button type="submit" class="linkButton"> <?= translate('Logout') ?> </button>
             </form>
         </td>
     </tr>

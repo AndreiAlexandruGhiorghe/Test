@@ -1,37 +1,37 @@
 <?php
 require_once 'common.php';
 
-$username_field = '';
-$username_field_error = '';
-$password_field = '';
-$password_field_error = '';
-$login_failed_message = '';
+$usernameField = '';
+$usernameFieldError = '';
+$passwordField = '';
+$passwordFieldError = '';
+$loginFailedMessage = '';
 
 
-if (isset($_POST['submit_button'])) {
+if (isset($_POST['submitButton'])) {
 
-    if ($_POST['username_field'] != '') {
-        $username_field = strip_tags($_POST['username_field']);
+    if ($_POST['usernameField'] != '') {
+        $usernameField = strip_tags($_POST['usernameField']);
     } else {
-        $username_field_error = translate('Enter a username');
+        $usernameFieldError = translate('Enter a username');
     }
-    if ($_POST['password_field'] != '') {
-        $password_field = strip_tags($_POST['password_field']);
+    if ($_POST['passwordField'] != '') {
+        $passwordField = strip_tags($_POST['passwordField']);
     } else {
-        $password_field_error = translate('Enter a password');
+        $passwordFieldError = translate('Enter a password');
     }
-    if ($username_field != '' && $password_field != '') {
+    if ($usernameField != '' && $passwordField != '') {
         $connection = databaseConnection();
 
         $users = query(
                 $connection,
                 'Select * from accounts where username = ? AND password = ?;',
-                [$username_field, $password_field]
+                [$usernameField, $passwordField]
         );
         if (
             isset($users[0]['username'])
-            && $users[0]['username'] == $username_field
-            && $users[0]['password'] == $password_field
+            && $users[0]['username'] == $usernameField
+            && $users[0]['password'] == $passwordField
         ) {
             if ($users[0]['admin'] == true) {
                 $_SESSION['admin'] = true;
@@ -43,7 +43,7 @@ if (isset($_POST['submit_button'])) {
             die();
 
         } else {
-            $login_failed_message = 'Wrong username or password';
+            $loginFailedMessage = 'Wrong username or password';
         }
     }
 
@@ -58,16 +58,16 @@ if (isset($_POST['submit_button'])) {
 </head>
 <body>
 <form action="login.php" method="POST">
-    <input type="text" class="input_type" name="username_field" placeholder="<?= translate('Username') ?>"
-           value="<?= translate($username_field) ?>">
-    <span class="error_field">* <?= translate($username_field_error) ?></span>
+    <input type="text" class="inputType" name="usernameField" placeholder="<?= translate('Username') ?>"
+           value="<?= translate($usernameField) ?>">
+    <span class="errorField">* <?= translate($usernameFieldError) ?></span>
     <br>
-    <input type="password" class="input_type" name="password_field" placeholder="<?= translate('Password') ?>"
-           value="<?= translate($password_field) ?>">
-    <span class="error_field">* <?= translate($password_field_error) ?></span>
+    <input type="password" class="inputType" name="passwordField" placeholder="<?= translate('Password') ?>"
+           value="<?= translate($passwordField) ?>">
+    <span class="errorField">* <?= translate($passwordFieldError) ?></span>
     <br>
-    <input type="submit" class="input_type_login" name="submit_button" value="<?= translate('Login') ?>">
-    <span class="error_field"> <?= translate($login_failed_message) ?> </span>
+    <input type="submit" class="inputTypeLogin" name="submitButton" value="<?= translate('Login') ?>">
+    <span class="errorField"> <?= translate($loginFailedMessage) ?> </span>
 </form>
 </body>
 </html>

@@ -4,25 +4,25 @@ require_once 'common.php';
 $connection = databaseConnection();
 
 // $my_cart takes the value of my_cart from this session
-$my_cart = isset($_SESSION['my_cart']) ? $_SESSION['my_cart'] : [];
+$myCart = isset($_SESSION['myCart']) ? $_SESSION['myCart'] : [];
 
 // I add the product the cart and I retain it within this session.
 // In the same time I am checking if there is such id in database
 if (
-    isset($_POST['id_product'])
+    isset($_POST['idProduct'])
     && count(query(
         $connection,
         'SELECT id FROM products WHERE id = ?;',
-        [intval($_POST['id_product'])]
+        [intval($_POST['idProduct'])]
     ))
 ) {
     // add the valid id of the product to cart
     // the key is the id of the product and the value is the quantity
-    $my_cart[intval($_POST['id_product'])] = 1;
-    $_SESSION['my_cart'] = $my_cart;
+    $myCart[intval($_POST['idProduct'])] = 1;
+    $_SESSION['myCart'] = $myCart;
 }
 
-$items = extract_products($connection, $my_cart, OUTSIDE_CART);
+$items = extractProducts($connection, $myCart, OUTSIDE_CART);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -33,12 +33,12 @@ $items = extract_products($connection, $my_cart, OUTSIDE_CART);
 </head>
 <body>
 
-<table id="content_table">
+<table id="contentTable">
     <tbody>
     <?php for ($i = 0; $i < count($items); $i++): ?>
-        <tr class="element_of_table">
+        <tr class="elementOfTable">
             <td>
-                <img class="phone_image" src="<?= $items[$i]['image_path'] ?>">
+                <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
             </td>
             <td>
                 <?= $items[$i]['title'] ?><br>
@@ -47,8 +47,8 @@ $items = extract_products($connection, $my_cart, OUTSIDE_CART);
             </td>
             <td>
                 <form method="post" action="index.php">
-                    <input type="hidden" name="id_product" value="<?= $items[$i]['id'] ?>">
-                    <button type="submit" class="link_button"> <?= translate('Add') ?> </button>
+                    <input type="hidden" name="idProduct" value="<?= $items[$i]['id'] ?>">
+                    <button type="submit" class="linkButton"> <?= translate('Add') ?> </button>
                 </form>
             </td>
         </tr>

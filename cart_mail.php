@@ -5,19 +5,17 @@ require_once 'common.php';
 $connection = databaseConnection();
 
 // I arrived there through post method from cart.php
-$input_data =  (isset($_SESSION['input_data'])) ? $_SESSION['input_data'] : [
-        'name_field' => '',
-        'address_field' => '',
-        'comments_field' => '',
+$inputData =  (isset($_SESSION['inputData'])) ? $_SESSION['inputData'] : [
+        'nameField' => '',
+        'addressField' => '',
+        'commentsField' => '',
 ];
-//
-//var_dump($_SESSION['input_data']);
 
 // I add the product the cart and I retain it within this session
-$my_cart = isset($_SESSION['my_cart']) ? $_SESSION['my_cart'] : [];
+$myCart = isset($_SESSION['myCart']) ? $_SESSION['myCart'] : [];
 
 // in items are the list with all products
-$items = extract_products($connection, $my_cart, INSIDE_CART);
+$items = extractProducts($connection, $myCart, INSIDE_CART);
 
 ob_start();
 ?>
@@ -27,16 +25,16 @@ ob_start();
         <meta charset="UTF-8">
         <title> <?= translate('Cart Page') ?> </title>
         <style>
-            .phone_image {
+            .phoneImage {
                 width: 100px;
                 height: 100px;
             }
 
-            #content_table {
+            #contentTable {
                 border-style: groove;
             }
 
-            .element_of_table {
+            .elementOfTable {
                 border-style: ridge;
                 display: block;
                 border-collapse: collapse;
@@ -46,12 +44,12 @@ ob_start();
     </head>
     <body>
 
-    <table id="content_table">
+    <table id="contentTable">
         <tbody>
         <?php for ($i = 0; $i < count($items); $i++): ?>
-            <tr class="element_of_table">
+            <tr class="elementOfTable">
                 <td>
-                    <img class="phone_image" src="<?= $items[$i]['image_path'] ?>">
+                    <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
                 </td>
                 <td>
                     <?= $items[$i]['title'] ?><br>
@@ -65,7 +63,7 @@ ob_start();
             <td>
                 <p>
                     <?= translate('Name: ') ?>
-                    <?= translate($input_data['name_field']) ?>
+                    <?= translate($inputData['nameField']) ?>
                 </p>
             </td>
         </tr>
@@ -73,7 +71,7 @@ ob_start();
             <td>
                 <p>
                     <?= translate('Address: ') ?>
-                    <?= translate($input_data['address_field']) ?>
+                    <?= translate($inputData['addressField']) ?>
                 </p>
             </td>
         </tr>
@@ -81,7 +79,7 @@ ob_start();
             <td>
                 <p>
                     <?= translate('Comments: ') ?>
-                    <?= translate($input_data['comments_field']) ?>
+                    <?= translate($inputData['commentsField']) ?>
                 </p>
             </td>
         </tr>
@@ -97,10 +95,10 @@ $html_page = ob_get_clean();
 $headers = 'From: ' . SENDER_ADDRESS . "\r\n";
 $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
-mail($input_data['address_field'], 'Your Cart', $html_page, $headers);
+mail($inputData['addressField'], 'Your Cart', $html_page, $headers);
 
 // empty the cart
-$_SESSION['my_cart'] = [];
+$_SESSION['myCart'] = [];
 
 header('Location: index.php');
 die();

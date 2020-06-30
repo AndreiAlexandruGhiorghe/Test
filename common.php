@@ -4,19 +4,19 @@ require_once 'config.php';
 session_start();
 
 // the initialisation of the translation variable
-$json_file = (fopen(TRANSLATION_FILE, 'r') !== false) ? fopen(TRANSLATION_FILE, 'r') : 0;
+$jsonFile = (fopen(TRANSLATION_FILE, 'r') !== false) ? fopen(TRANSLATION_FILE, 'r') : 0;
 
-$json_file_size = (filesize(TRANSLATION_FILE) !== false) ? filesize(TRANSLATION_FILE) : 0;
+$jsonFileSize = (fileSize(TRANSLATION_FILE) !== false) ? fileSize(TRANSLATION_FILE) : 0;
 
-$json_file_content = (
-    $json_file != 0
-    && fread($json_file, $json_file_size) !== false
-) ? fread($json_file, $json_file_size) : '';
+$jsonFileContent = (
+    $jsonFile != 0
+    && fread($jsonFile, $jsonFileSize) !== false
+) ? fread($jsonFile, $jsonFileSize) : '';
 
-$translation = json_decode($json_file_content, true);
+$translation = json_decode($jsonFileContent, true);
 $translation = ($translation !== null && $translation !== false) ? $translation : [];
 
-fclose($json_file);
+fclose($jsonFile);
 
 function query($connection, $query, $params): array
 {
@@ -57,27 +57,27 @@ function translate($string): string
 
 // extract_products it's used whenever I need to list products
 // from inside or outside the cart(index.php, cart.php)
-function extract_products($connection, $my_cart, $type_of_product): array
+function extractProducts($connection, $myCart, $typeOfProduct): array
 {
-    if ($type_of_product == INSIDE_CART) {
-        $part_of_the_query = 'SELECT * FROM products WHERE id IN ';
-    } elseif ($type_of_product == OUTSIDE_CART) {
-        $part_of_the_query = 'SELECT * FROM products WHERE id NOT IN ';
+    if ($typeOfProduct == INSIDE_CART) {
+        $partOfTheQuery = 'SELECT * FROM products WHERE id IN ';
+    } elseif ($typeOfProduct == OUTSIDE_CART) {
+        $partOfTheQuery = 'SELECT * FROM products WHERE id NOT IN ';
     }
 
     // the query
-    if (count($my_cart)) {
-        $query_string = $part_of_the_query .
+    if (count($myCart)) {
+        $queryString = $partOfTheQuery .
             '(' .
-            implode(', ', array_fill(0, count($my_cart), '?')) .
+            implode(', ', array_fill(0, count($myCart), '?')) .
             ');';
 
-        $items = query($connection, $query_string, array_keys($my_cart));
+        $items = query($connection, $queryString, array_keys($myCart));
     } else {
-        if ($type_of_product == OUTSIDE_CART) {
-            $query_string = 'SELECT * FROM products;';
+        if ($typeOfProduct == OUTSIDE_CART) {
+            $queryString = 'SELECT * FROM products;';
             // the interogation to database
-            $items = query($connection, $query_string, array_keys($my_cart));
+            $items = query($connection, $queryString, array_keys($myCart));
         } else {
             // that means I need the products that are inside the cart
             // no items I need
