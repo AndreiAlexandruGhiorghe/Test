@@ -17,8 +17,8 @@ if (
     ))
 ) {
     // add the valid id of the product to cart
-    // what it matters is the key
-    $my_cart[intval($_POST['id_product'])] = '';
+    // the key is the id of the product and the value is the quantity
+    $my_cart[intval($_POST['id_product'])] = 1;
     $_SESSION['my_cart'] = $my_cart;
 }
 

@@ -76,7 +76,11 @@ function extract_products($connection, $my_cart, $type_of_product): array
 
     // the query
     if (count($my_cart)) {
-        $query_string = $part_of_the_query . question_marks(count($my_cart)) . ';';
+        $query_string = $part_of_the_query .
+            '(' .
+            implode(', ', array_fill(0, count($my_cart), '?')) .
+            ');';
+
         $items = query($connection, $query_string, array_keys($my_cart));
     } else {
         if ($type_of_product == OUTSIDE_CART) {
