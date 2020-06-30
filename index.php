@@ -3,7 +3,7 @@ require_once 'common.php';
 
 $connection = databaseConnection();
 
-// $my_cart takes the value of my_cart from this session
+// $myCart takes the value of myCart from this session
 $myCart = isset($_SESSION['myCart']) ? $_SESSION['myCart'] : [];
 
 // I add the product the cart and I retain it within this session.

@@ -55,7 +55,7 @@ function translate($string): string
     return $string;
 }
 
-// extract_products it's used whenever I need to list products
+// extractProducts it's used whenever I need to list products
 // from inside or outside the cart(index.php, cart.php)
 function extractProducts($connection, $myCart, $typeOfProduct): array
 {

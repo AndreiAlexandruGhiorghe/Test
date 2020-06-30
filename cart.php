@@ -8,7 +8,7 @@ $connection = databaseConnection();
 $myCart = isset($_SESSION['myCart']) ? $_SESSION['myCart'] : [];
 
 // initialise fields errors
-$nameField_error = '';
+$nameFieldError = '';
 $addressFieldError = '';
 
 // initialise the input fields
@@ -22,7 +22,7 @@ if (isset($_POST['idProduct'])) {
 } elseif (isset($_POST['nameField']) && $_POST['addressField']) {
     $inputData['nameField'] = $_POST['nameField'];
     if (strlen($inputData['nameField']) < 5 || strlen($inputData['nameField']) > 18) {
-        $nameField_error = 'The name should be between 5 and 18 characters.';
+        $nameFieldError = 'The name should be between 5 and 18 characters.';
     }
 
     $inputData['addressField'] = strip_tags($_POST['addressField']);
@@ -31,7 +31,7 @@ if (isset($_POST['idProduct'])) {
     }
 
     $inputData['commentsField'] = strip_tags($_POST['commentsField']);
-    if ($nameField_error == '' && $addressFieldError == '') {
+    if ($nameFieldError == '' && $addressFieldError == '') {
         $_SESSION['inputData'] = $inputData;
         header('Location: cart_mail.php');
         die();
@@ -79,7 +79,7 @@ ob_start();
                 <input class="inputType" type="text" name="nameField"
                        placeholder="<?= translate('Name') ?>"
                        value="<?= $inputData['nameField'] ?>">
-                <span class="errorField">* <?= translate($nameField_error) ?></span>
+                <span class="errorField">* <?= translate($nameFieldError) ?></span>
             </td>
         </tr>
         <tr>

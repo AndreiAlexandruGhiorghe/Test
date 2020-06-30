@@ -88,14 +88,14 @@ ob_start();
     </body>
     </html>
 <?php
-$html_page = ob_get_clean();
+$htmlPage = ob_get_clean();
 
 // I use "" because otherwise when I send them on email
 // \r\n are saw as plain text
 $headers = 'From: ' . SENDER_ADDRESS . "\r\n";
 $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
-mail($inputData['addressField'], 'Your Cart', $html_page, $headers);
+mail($inputData['addressField'], 'Your Cart', $htmlPage, $headers);
 
 // empty the cart
 $_SESSION['myCart'] = [];
