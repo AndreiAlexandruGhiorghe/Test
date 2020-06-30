@@ -32,16 +32,27 @@ if (isset($_POST['idProduct'])) {
 
     $inputData['commentsField'] = strip_tags($_POST['commentsField']);
     if ($nameFieldError == '' && $addressFieldError == '') {
-        $_SESSION['inputData'] = $inputData;
-        header('Location: cart_mail.php');
+        ob_start();
+        include('cart_mail.php');
+        $htmlPage = ob_get_clean();
+
+        // I use "" because otherwise when I send them on email, \r\n are saw as plain text
+        $headers = 'From: ' . SENDER_ADDRESS . "\r\n" . 'Content-Type: text/html; charset=UTF-8' . "\r\n";
+
+        // sending the mail
+        mail($inputData['addressField'], 'Your Cart', $htmlPage, $headers);
+
+        // empty the cart
+        $_SESSION['myCart'] = [];
+
+        //redirect to index page with the cart empty
+        header('Location: index.php');
         die();
     }
 }
 
 // in items are the list with all products
 $items = extractProducts($connection, $myCart, INSIDE_CART);
-
-ob_start();
 ?>
 <!DOCTYPE html>
 <html>
