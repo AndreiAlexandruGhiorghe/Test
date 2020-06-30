@@ -55,15 +55,6 @@ function translate($string): string
     return $string;
 }
 
-function question_marks($nr_of_quotes): string
-{
-    $return_string = '(';
-    $return_string .= implode(', ', array_fill(0, $nr_of_quotes, '?'));
-    $return_string .= ')';
-
-    return $return_string;
-}
-
 // extract_products it's used whenever I need to list products
 // from inside or outside the cart(index.php, cart.php)
 function extract_products($connection, $my_cart, $type_of_product): array
