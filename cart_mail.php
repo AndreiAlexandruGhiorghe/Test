@@ -34,7 +34,7 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
     <?php for ($i = 0; $i < count($items); $i++): ?>
         <tr class="elementOfTable">
             <td>
-                <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
+                <img class="phoneImage" src="<?= 'http://localhost/Test/' . $items[$i]['image_path'] ?>">
             </td>
             <td>
                 <?= $items[$i]['title'] ?><br>

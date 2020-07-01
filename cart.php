@@ -12,8 +12,11 @@ $nameFieldError = '';
 $addressFieldError = '';
 
 // initialise the input fields
-$inputData = [];
-$inputData['nameField'] = $inputData['addressField'] = $inputData['commentsField'] = '';
+$inputData = [
+    'nameField' => '',
+    'addressField' => '',
+    'commentsField' => '',
+];
 
 // I add the product the cart and the cookie retain it
 if (isset($_POST['idProduct'])) {
@@ -45,7 +48,7 @@ if (isset($_POST['idProduct'])) {
         // empty the cart
         $_SESSION['myCart'] = [];
 
-        //redirect to index page with the cart empty
+        // redirect to index page with the cart empty
         header('Location: index.php');
         die();
     }
