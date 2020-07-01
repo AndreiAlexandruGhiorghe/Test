@@ -2,51 +2,39 @@
 require_once 'common.php';
 
 $usernameField = '';
-$usernameFieldError = '';
 $passwordField = '';
-$passwordFieldError = '';
-$loginFailedMessage = '';
+$inputErrors = [];
 
+if (isset($_SESSION['username']) && $_SESSION['username'] == ADMIN_CREDENTIALS['username']) {
+    header('Location: products.php');
+    die();
+}
 
 if (isset($_POST['submitButton'])) {
 
-    if ($_POST['usernameField'] != '') {
+    if ($_POST['usernameField']) {
         $usernameField = strip_tags($_POST['usernameField']);
     } else {
-        $usernameFieldError = translate('Enter a username');
+        $inputErrors['usernameFieldError'] = translate('* Enter a username');
     }
-    if ($_POST['passwordField'] != '') {
+
+    if ($_POST['passwordField']) {
         $passwordField = strip_tags($_POST['passwordField']);
     } else {
-        $passwordFieldError = translate('Enter a password');
+        $inputErrors['passwordFieldError'] = translate('* Enter a password');
     }
-    if ($usernameField != '' && $passwordField != '') {
-        $connection = databaseConnection();
 
-        $users = query(
-                $connection,
-                'Select * from accounts where username = ? AND password = ?;',
-                [$usernameField, $passwordField]
-        );
+    if (!count($inputErrors)) {
         if (
-            isset($users[0]['username'])
-            && $users[0]['username'] == $usernameField
-            && $users[0]['password'] == $passwordField
+                $usernameField == ADMIN_CREDENTIALS['username']
+                && $passwordField == ADMIN_CREDENTIALS['password']
         ) {
-            if ($users[0]['admin'] == true) {
-                $_SESSION['admin'] = true;
-                header('Location: products.php');
-            } else {
-                $_SESSION['admin'] = false;
-                header('Location: index.php');
-            }
+            $_SESSION['username'] = $usernameField;
+            header('Location: products.php');
             die();
-
-        } else {
-            $loginFailedMessage = 'Wrong username or password';
         }
+        $inputErrors['loginFailedMessage'] = 'Wrong username or password';
     }
-
 }
 ?>
 <!DOCTYPE HTML>
@@ -60,14 +48,20 @@ if (isset($_POST['submitButton'])) {
 <form action="login.php" method="POST">
     <input type="text" class="inputType" name="usernameField" placeholder="<?= translate('Username') ?>"
            value="<?= translate($usernameField) ?>">
-    <span class="errorField">* <?= translate($usernameFieldError) ?></span>
+    <span class="errorField"> <?= translate(
+            isset($inputErrors['usernameFieldError']) ? $inputErrors['usernameFieldError'] : ''
+        ) ?></span>
     <br>
     <input type="password" class="inputType" name="passwordField" placeholder="<?= translate('Password') ?>"
            value="<?= translate($passwordField) ?>">
-    <span class="errorField">* <?= translate($passwordFieldError) ?></span>
+    <span class="errorField"> <?= translate(
+            isset($inputErrors['passwordFieldError']) ? $inputErrors['passwordFieldError'] : ''
+        ) ?> </span>
     <br>
     <input type="submit" class="inputTypeLogin" name="submitButton" value="<?= translate('Login') ?>">
-    <span class="errorField"> <?= translate($loginFailedMessage) ?> </span>
+    <span class="errorField"> <?= translate(
+            isset($inputErrors['loginFailedMessage']) ? $inputErrors['loginFailedMessage'] : ''
+        ) ?> </span>
 </form>
 </body>
 </html>

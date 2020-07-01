@@ -1,6 +1,20 @@
 <?php
 require_once 'common.php';
 
+// check if the user is logged in, if he itsn't then I redirect him to login.php
+if (!isset($_SESSION['username']) || $_SESSION['username'] != ADMIN_CREDENTIALS['username']) {
+    header('Location: login.php');
+    die();
+}
+
+// if the user wants to logout then
+// I first must delete from session username and after I redirect him to login.php
+if (isset($_POST['logoutButton'])) {
+    unset($_SESSION['username']);
+    header('Location: login.php');
+    die();
+}
+
 $connection = databaseConnection();
 
 $items = query($connection, 'SELECT * FROM products;',[]);
@@ -49,9 +63,11 @@ $items = query($connection, 'SELECT * FROM products;',[]);
             </form>
         </td>
         <td>
-            <form method="post" action="login.php">
+            <form method="post" action="products.php">
                 <input type="hidden" name="idProductDelete" value="<?= $items[$i]['id'] ?>">
-                <button type="submit" class="linkButton"> <?= translate('Logout') ?> </button>
+                <button type="submit" class="linkButton" name="logoutButton">
+                    <?= translate('Logout') ?>
+                </button>
             </form>
         </td>
     </tr>
