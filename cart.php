@@ -8,8 +8,7 @@ $connection = databaseConnection();
 $myCart = isset($_SESSION['myCart']) ? $_SESSION['myCart'] : [];
 
 // initialise fields errors
-$nameFieldError = '';
-$addressFieldError = '';
+$inputErrors = [];
 
 // initialise the input fields
 $inputData = [
@@ -22,23 +21,23 @@ $inputData = [
 if (isset($_POST['idProduct'])) {
     unset($myCart[intval($_POST['idProduct'])]);
     $_SESSION['myCart'] = $myCart;
-} elseif (isset($_POST['nameField']) && $_POST['addressField']) {
+} elseif (isset($_POST['nameField']) && isset($_POST['addressField'])) {
     $inputData['nameField'] = $_POST['nameField'];
     if (strlen($inputData['nameField']) < 5 || strlen($inputData['nameField']) > 18) {
-        $nameFieldError = 'The name should be between 5 and 18 characters.';
+        $inputErrors['nameFieldError'] = 'The name should be between 5 and 18 characters.';
     }
 
     $inputData['addressField'] = strip_tags($_POST['addressField']);
     if (!filter_var($inputData['addressField'], FILTER_VALIDATE_EMAIL)) {
-        $addressFieldError = 'Invalid email address';
+        $inputErrors['addressFieldError'] = 'Invalid email address';
     }
 
     $inputData['commentsField'] = strip_tags($_POST['commentsField']);
-    if ($nameFieldError == '' && $addressFieldError == '') {
+    if (!count($inputErrors)) {
         ob_start();
         include('cart_mail.php');
         $htmlPage = ob_get_clean();
-
+        echo $htmlPage;
         // I use "" because otherwise when I send them on email, \r\n are saw as plain text
         $headers = 'From: ' . SENDER_ADDRESS . "\r\n" . 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
@@ -53,7 +52,7 @@ if (isset($_POST['idProduct'])) {
         die();
     }
 }
-
+#var_dump($inputErrors);
 // in items are the list with all products
 $items = extractProducts($connection, $myCart, INSIDE_CART);
 ?>
@@ -93,7 +92,9 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
                 <input class="inputType" type="text" name="nameField"
                        placeholder="<?= translate('Name') ?>"
                        value="<?= $inputData['nameField'] ?>">
-                <span class="errorField">* <?= translate($nameFieldError) ?></span>
+                <span class="errorField">* <?= translate(
+                        isset($inputErrors['nameFieldError']) ? $inputErrors['nameFieldError'] : ''
+                    ) ?></span>
             </td>
         </tr>
         <tr>
@@ -101,7 +102,9 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
                 <input class="inputType" type="text" name="addressField"
                        placeholder="<?= translate('Contact deatails') ?>"
                        value="<?= $inputData['addressField'] ?>">
-                <span class="errorField">* <?= translate($addressFieldError) ?></span>
+                <span class="errorField">* <?= translate(
+                        isset($inputErrors['addressFieldError']) ? $inputErrors['addressFieldError'] : ''
+                    ) ?></span>
             </td>
         </tr>
         <tr>
