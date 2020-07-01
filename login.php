@@ -1,15 +1,15 @@
 <?php
 require_once 'common.php';
 
-// username and password
-$inputData = [];
-// the errors from username, password and login overall
-$inputErrors = [];
-
 if (isset($_SESSION['username']) && $_SESSION['username'] == ADMIN_CREDENTIALS['username']) {
     header('Location: products.php');
     die();
 }
+
+// username and password
+$inputData = [];
+// the errors from username, password and login overall
+$inputErrors = [];
 
 if (isset($_POST['submitButton'])) {
 
