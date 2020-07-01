@@ -58,13 +58,11 @@ $items = query($connection, 'SELECT * FROM products;',[]);
     <tr>
         <td>
             <form method="post" action="product.php">
-                <input type="hidden" name="idProductEdit" value="<?= $items[$i]['id'] ?>">
-                <button type="submit" class="linkButton"> <?= translate('Add') ?> </button>
+                <button type="submit" name="addButton" class="linkButton"> <?= translate('Add') ?> </button>
             </form>
         </td>
         <td>
             <form method="post" action="products.php">
-                <input type="hidden" name="idProductDelete" value="<?= $items[$i]['id'] ?>">
                 <button type="submit" class="linkButton" name="logoutButton">
                     <?= translate('Logout') ?>
                 </button>
