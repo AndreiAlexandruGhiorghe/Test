@@ -1,6 +1,7 @@
 <?php
 require_once 'common.php';
 
+// checking if the user is allready logged in
 if (isset($_SESSION['username']) && $_SESSION['username'] == ADMIN_CREDENTIALS['username']) {
     header('Location: products.php');
     die();
