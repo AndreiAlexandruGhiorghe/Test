@@ -2,7 +2,7 @@
 require_once 'common.php';
 
 // check if the user is logged in, if he itsn't then I redirect him to login.php
-if (!isset($_SESSION['username']) || $_SESSION['username'] != ADMIN_CREDENTIALS['username']) {
+if (!isset($_SESSION['username']) || $_SESSION['username'] != ADMIN_CREDENTIALS['USERNAME']) {
     header('Location: login.php');
     die();
 }
@@ -43,7 +43,7 @@ $items = query($connection, 'SELECT * FROM products;',[]);
                 <td>
                     <form method="post" action="product.php">
                         <input type="hidden" name="idProductEdit" value="<?= $items[$i]['id'] ?>">
-                        <button type="submit" class="linkButton"> <?= translate('Edit') ?> </button>
+                        <button type="submit" class="linkButton" name="editButton"> <?= translate('Edit') ?> </button>
                     </form>
                 </td>
                 <td>

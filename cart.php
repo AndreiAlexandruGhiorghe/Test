@@ -37,7 +37,6 @@ if (isset($_POST['idProduct'])) {
         ob_start();
         include('cart_mail.php');
         $htmlPage = ob_get_clean();
-        echo $htmlPage;
         // I use "" because otherwise when I send them on email, \r\n are saw as plain text
         $headers = 'From: ' . SENDER_ADDRESS . "\r\n" . 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
@@ -52,7 +51,7 @@ if (isset($_POST['idProduct'])) {
         die();
     }
 }
-#var_dump($inputErrors);
+
 // in items are the list with all products
 $items = extractProducts($connection, $myCart, INSIDE_CART);
 ?>
@@ -92,9 +91,10 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
                 <input class="inputType" type="text" name="nameField"
                        placeholder="<?= translate('Name') ?>"
                        value="<?= $inputData['nameField'] ?>">
-                <span class="errorField">* <?= translate(
-                        isset($inputErrors['nameFieldError']) ? $inputErrors['nameFieldError'] : ''
-                    ) ?></span>
+                <span class="errorField"> <?=
+                        isset($inputErrors['nameFieldError']) ?
+                        '* ' . translate($inputErrors['nameFieldError']) : ''
+                    ?></span>
             </td>
         </tr>
         <tr>
@@ -102,9 +102,10 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
                 <input class="inputType" type="text" name="addressField"
                        placeholder="<?= translate('Contact deatails') ?>"
                        value="<?= $inputData['addressField'] ?>">
-                <span class="errorField">* <?= translate(
-                        isset($inputErrors['addressFieldError']) ? $inputErrors['addressFieldError'] : ''
-                    ) ?></span>
+                <span class="errorField"> <?=
+                        isset($inputErrors['addressFieldError']) ?
+                        '* ' . translate($inputErrors['addressFieldError']) : ''
+                    ?></span>
             </td>
         </tr>
         <tr>

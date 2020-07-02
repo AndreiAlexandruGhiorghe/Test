@@ -2,7 +2,7 @@
 require_once 'common.php';
 
 // checking if the user is allready logged in
-if (isset($_SESSION['username']) && $_SESSION['username'] == ADMIN_CREDENTIALS['username']) {
+if (isset($_SESSION['username']) && $_SESSION['username'] == ADMIN_CREDENTIALS['USERNAME']) {
     header('Location: products.php');
     die();
 }
@@ -17,19 +17,19 @@ if (isset($_POST['submitButton'])) {
     if ($_POST['usernameField']) {
         $inputData['usernameField'] = strip_tags($_POST['usernameField']);
     } else {
-        $inputErrors['usernameFieldError'] = translate('* Enter a username');
+        $inputErrors['usernameFieldError'] = 'Enter a username';
     }
 
     if ($_POST['passwordField']) {
         $inputData['passwordField'] = strip_tags($_POST['passwordField']);
     } else {
-        $inputErrors['passwordFieldError'] = translate('* Enter a password');
+        $inputErrors['passwordFieldError'] = 'Enter a password';
     }
 
     if (!count($inputErrors)) {
         if (
-                $inputData['usernameField'] == ADMIN_CREDENTIALS['username']
-                && $inputData['passwordField'] == ADMIN_CREDENTIALS['password']
+                $inputData['usernameField'] == ADMIN_CREDENTIALS['USERNAME']
+                && $inputData['passwordField'] == ADMIN_CREDENTIALS['PASSWORD']
         ) {
             $_SESSION['username'] = $inputData['usernameField'];
             header('Location: products.php');
@@ -49,25 +49,28 @@ if (isset($_POST['submitButton'])) {
 <body>
 <form action="login.php" method="POST">
     <input type="text" class="inputType" name="usernameField" placeholder="<?= translate('Username') ?>"
-           value="<?= translate(
+           value="<?=
                    isset($inputData['usernameField']) ? $inputData['usernameField'] : ''
-           ) ?>">
-    <span class="errorField"> <?= translate(
-            isset($inputErrors['usernameFieldError']) ? $inputErrors['usernameFieldError'] : ''
-        ) ?></span>
+           ?>">
+    <span class="errorField"> <?=
+            isset($inputErrors['usernameFieldError']) ?
+            '* ' . translate($inputErrors['usernameFieldError']) : ''
+        ?></span>
     <br>
     <input type="password" class="inputType" name="passwordField" placeholder="<?= translate('Password') ?>"
-           value="<?= translate(
+           value="<?=
                    isset($inputData['passwordField']) ? $inputData['passwordField'] : ''
-           ) ?>">
-    <span class="errorField"> <?= translate(
-            isset($inputErrors['passwordFieldError']) ? $inputErrors['passwordFieldError'] : ''
-        ) ?> </span>
+           ?>">
+    <span class="errorField"> <?=
+            isset($inputErrors['passwordFieldError']) ?
+            '* ' . translate($inputErrors['passwordFieldError']) : ''
+        ?> </span>
     <br>
     <input type="submit" class="inputTypeLogin" name="submitButton" value="<?= translate('Login') ?>">
-    <span class="errorField"> <?= translate(
-            isset($inputErrors['loginFailedMessage']) ? $inputErrors['loginFailedMessage'] : ''
-        ) ?> </span>
+    <span class="errorField"> <?=
+            isset($inputErrors['loginFailedMessage']) ?
+            '* ' . translate($inputErrors['loginFailedMessage']) : ''
+        ?> </span>
 </form>
 </body>
 </html>
