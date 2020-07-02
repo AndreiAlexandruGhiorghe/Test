@@ -96,7 +96,7 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
                         value="<?= $inputData['nameField'] ?>"
                 >
                 <span class="errorField"> <?=
-                        isset($inputErrors['nameFieldError']) ?
+                    isset($inputErrors['nameFieldError']) ?
                         '* ' . translate($inputErrors['nameFieldError']) : ''
                     ?></span>
             </td>
@@ -111,7 +111,7 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
                         value="<?= $inputData['addressField'] ?>"
                 >
                 <span class="errorField"> <?=
-                        isset($inputErrors['addressFieldError']) ?
+                    isset($inputErrors['addressFieldError']) ?
                         '* ' . translate($inputErrors['addressFieldError']) : ''
                     ?></span>
             </td>

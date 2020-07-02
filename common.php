@@ -87,3 +87,22 @@ function extractProducts($connection, $myCart, $typeOfProduct): array
 
     return $items;
 }
+
+function checkingProductFields(&$inputData, &$inputError, $postData): array
+{
+    if ($postData['titleField']) {
+        $inputData['titleField'] = $postData['titleField'];
+    } else {
+        $inputError['titleFieldError'] = 'Please enter a title for product';
+    }
+    if ($postData['descriptionField']) {
+        $inputData['descriptionField'] = $postData['descriptionField'];
+    } else {
+        $inputError['descriptionFieldError'] = 'Please enter a description for product';
+    }
+    if ($postData['priceField']) {
+        $inputData['priceField'] = $postData['priceField'];
+    } else {
+        $inputError['priceFieldError'] = 'Please enter a price for product';
+    }
+}
