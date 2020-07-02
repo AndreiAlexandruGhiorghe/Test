@@ -48,19 +48,25 @@ if (isset($_POST['submitButton'])) {
 </head>
 <body>
 <form action="login.php" method="POST">
-    <input type="text" class="inputType" name="usernameField" placeholder="<?= translate('Username') ?>"
-           value="<?=
-                   isset($inputData['usernameField']) ? $inputData['usernameField'] : ''
-           ?>">
+    <input
+            type="text"
+            class="inputType"
+            name="usernameField"
+            placeholder="<?= translate('Username') ?>"
+            value="<?= isset($inputData['usernameField']) ? $inputData['usernameField'] : '' ?>"
+    >
     <span class="errorField"> <?=
             isset($inputErrors['usernameFieldError']) ?
             '* ' . translate($inputErrors['usernameFieldError']) : ''
         ?></span>
     <br>
-    <input type="password" class="inputType" name="passwordField" placeholder="<?= translate('Password') ?>"
-           value="<?=
-                   isset($inputData['passwordField']) ? $inputData['passwordField'] : ''
-           ?>">
+    <input
+            type="password"
+            class="inputType"
+            name="passwordField"
+            placeholder="<?= translate('Password') ?>"
+            value="<?= isset($inputData['passwordField']) ? $inputData['passwordField'] : '' ?>"
+    >
     <span class="errorField"> <?=
             isset($inputErrors['passwordFieldError']) ?
             '* ' . translate($inputErrors['passwordFieldError']) : ''

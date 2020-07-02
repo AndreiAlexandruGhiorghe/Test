@@ -88,9 +88,13 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
     <form action="cart.php" method="POST">
         <tr>
             <td>
-                <input class="inputType" type="text" name="nameField"
-                       placeholder="<?= translate('Name') ?>"
-                       value="<?= $inputData['nameField'] ?>">
+                <input
+                        class="inputType"
+                        type="text"
+                        name="nameField"
+                        placeholder="<?= translate('Name') ?>"
+                        value="<?= $inputData['nameField'] ?>"
+                >
                 <span class="errorField"> <?=
                         isset($inputErrors['nameFieldError']) ?
                         '* ' . translate($inputErrors['nameFieldError']) : ''
@@ -99,9 +103,13 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
         </tr>
         <tr>
             <td>
-                <input class="inputType" type="text" name="addressField"
-                       placeholder="<?= translate('Contact deatails') ?>"
-                       value="<?= $inputData['addressField'] ?>">
+                <input
+                        class="inputType"
+                        type="text"
+                        name="addressField"
+                        placeholder="<?= translate('Contact deatails') ?>"
+                        value="<?= $inputData['addressField'] ?>"
+                >
                 <span class="errorField"> <?=
                         isset($inputErrors['addressFieldError']) ?
                         '* ' . translate($inputErrors['addressFieldError']) : ''
@@ -110,8 +118,13 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
         </tr>
         <tr>
             <td>
-            <textarea id="commentsSection" class="inputType" type="text" name="commentsField"
-                      placeholder="<?= translate('Comments') ?>">
+            <textarea
+                    id="commentsSection"
+                    class="inputType"
+                    type="text"
+                    name="commentsField"
+                    placeholder="<?= translate('Comments') ?>"
+            >
                 <?= $inputData['commentsField'] ?>
             </textarea>
             </td>
