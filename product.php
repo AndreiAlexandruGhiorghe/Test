@@ -6,6 +6,19 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != ADMIN_CREDENTIALS[
     die();
 }
 
+// if admin chooses to go to products I have first to unset some variables
+if (isset($_POST['goToProducts'])) {
+
+    var_dump($_POST);
+    if ($_SESSION['actionType'] == EDIT_ACTION) {
+        unset($_SESSION['idProductEdit']);
+        unset($_SESSION['imagePath']);
+    }
+    unset($_SESSION['actionType']);
+    header("Location: products.php");
+    die();
+}
+
 // the connection with server
 $connection = databaseConnection();
 
@@ -20,30 +33,42 @@ $inputData = [
 // the errors from the admin's input
 $inputError = [];
 
-if (!isset($_SESSION['actionType'])) {
-    // checking if editButton was pressed
-    if (isset($_POST['editButton']) && isset($_POST['idProductEdit'])) {
-        $_SESSION['idProductEdit'] = intval($_POST['idProductEdit']);
-        $_SESSION['actionType'] = EDIT_ACTION;
+// checking if editButton was pressed
+if (isset($_POST['editButton']) && isset($_POST['idProductEdit'])) {
+    $_SESSION['idProductEdit'] = intval($_POST['idProductEdit']);
+    $_SESSION['actionType'] = EDIT_ACTION;
 
-        // taking the data from database
-        $productEditInfo = query(
-                $connection,
-                'SELECT title, description, price, image_path FROM products WHERE id = ?;',
-                [$_SESSION['idProductEdit']]
-        );
-        var_dump($productEditInfo);
-    } elseif (isset($_POST['addButton'])) {
-        // checked: if addButton was pressed
-        $_SESSION['actionType'] = ADD_ACTION;
-    }
+    // taking the data from database
+    $productEditInfo = query(
+            $connection,
+            'SELECT title, description, price, image_path FROM products WHERE id = ?;',
+            [$_SESSION['idProductEdit']]
+    );
+    $inputData = [
+        'titleField' => $productEditInfo[0]['title'],
+        'descriptionField' => $productEditInfo[0]['description'],
+        'priceField' => $productEditInfo[0]['price'],
+        'imageNameField' => '',
+    ];
+    // image_path is stored in Session because I need it later,
+    // if admin don't choose an image.
+    // I cant send it via post because in the ADD_ACTION case there is no need to remember it
+    $_SESSION['imagePath'] = $productEditInfo[0]['image_path'];
+    $defaultImage = true;
+} elseif (isset($_POST['addButton'])) {
+    // checked: if addButton was pressed
+    $_SESSION['actionType'] = ADD_ACTION;
 }
 
 // checking if the add button was pressed or edit button or none
 if (isset($_SESSION['actionType'])) {
     if ($_SESSION['actionType'] == ADD_ACTION) {
         if (isset($_POST['submitButton'])) {
-            checkingProductFields($inputData, $inputError, $_POST);
+            // validate fields: title, description and price
+            $data = validateFields(['inputData' => $inputData, 'inputError' => $inputError, 'post' => $_POST]);
+            $inputData = $data['inputData'];
+            $inputError = $data['inputError'];
+
             if (isset($_FILES['imageFileField']) && $_FILES['imageFileField']['tmp_name']) {
                 $inputData['imageLocation'] = $_FILES['imageFileField']['tmp_name'];
                 $inputData['imageName'] = $_FILES['imageFileField']['name'];
@@ -64,11 +89,62 @@ if (isset($_SESSION['actionType'])) {
                 );
                 move_uploaded_file($inputData['imageLocation'], $imagePath);
                 unset($_FILES['imageFileField']);
+                unset($_SESSION['actionType']);
+                header('Location: products.php');
+                die();
             }
         }
-    }
-    if ($_SESSION['actionType'] == EDIT_ACTION) {
+    } elseif ($_SESSION['actionType'] == EDIT_ACTION) {
+        var_dump($_POST);
+        if (isset($_POST['submitButton'])) {
+            // validate fields: title, description and price
+            $data = validateFields(['inputData' => $inputData, 'inputError' => $inputError, 'post' => $_POST]);
+            $inputData = $data['inputData'];
+            $inputError = $data['inputError'];
 
+            if (isset($_FILES['imageFileField']) && $_FILES['imageFileField']['tmp_name']) {
+                $inputData['imageLocation'] = $_FILES['imageFileField']['tmp_name'];
+                $inputData['imageName'] = $_FILES['imageFileField']['name'];
+                $defaultImage = false;
+            } else {
+                $defaultImage = true;
+            }
+            if (!count($inputError)) {
+                if ($defaultImage) {
+                    $response = query(
+                        $connection,
+                        'UPDATE products SET title = ?, description = ?, price = ? WHERE id = ?;',
+                        [
+                            $inputData['titleField'],
+                            $inputData['descriptionField'],
+                            intval($inputData['priceField']),
+                            $_SESSION['idProductEdit'],
+                        ]
+                    );
+                } else {
+                    $imagePath = 'images/' . time() . $inputData['imageName'];
+                    $response = query(
+                        $connection,
+                        'UPDATE products SET title = ?, description = ?, price = ?, image_path = ? WHERE id = ?',
+                        [
+                            $inputData['titleField'],
+                            $inputData['descriptionField'],
+                            intval($inputData['priceField']),
+                            $imagePath,
+                            $_SESSION['idProductEdit'],
+                        ]
+                    );
+                    move_uploaded_file($inputData['imageLocation'], $imagePath);
+                    // delete the old image
+                    unlink($_SESSION['imagePath']);
+                }
+                unset($_FILES['imageFileField']);
+                unset($_SESSION['actionType']);
+                unset($_SESSION['imagePath']);
+                header('Location: products.php');
+                die();
+            }
+        }
     }
 }
 ?>
@@ -134,7 +210,9 @@ if (isset($_SESSION['actionType'])) {
         </tr>
         <tr>
             <td>
-                <a href="products.php"><?= translate('Products') ?></a>
+                <button type="submit" name="goToProducts" class="linkButton">
+                    <?= translate('products') ?>
+                </button>
             </td>
             <td>
                     <button type="submit" name="submitButton"> <?= translate('Save') ?></button>

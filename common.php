@@ -88,21 +88,26 @@ function extractProducts($connection, $myCart, $typeOfProduct): array
     return $items;
 }
 
-function checkingProductFields(&$inputData, &$inputError, $postData): array
+function validateFields($data): array
 {
-    if ($postData['titleField']) {
-        $inputData['titleField'] = $postData['titleField'];
+    $returnData = ['inputData' => $data['inputData'], 'inputError' => []];
+    if (isset($data['post']['titleField']) && $data['post']['titleField']) {
+        $returnData['inputData']['titleField'] = $data['post']['titleField'];
     } else {
-        $inputError['titleFieldError'] = 'Please enter a title for product';
+        $returnData['inputError']['titleFieldError'] = 'Please enter a title for product';
     }
-    if ($postData['descriptionField']) {
-        $inputData['descriptionField'] = $postData['descriptionField'];
+    if (isset($data['post']['descriptionField']) && $data['post']['descriptionField']) {
+        $returnData['inputData']['descriptionField'] = $data['post']['descriptionField'];
     } else {
-        $inputError['descriptionFieldError'] = 'Please enter a description for product';
+        $returnData['inputError']['descriptionFieldError'] = 'Please enter a description for product';
     }
-    if ($postData['priceField']) {
-        $inputData['priceField'] = $postData['priceField'];
-    } else {
-        $inputError['priceFieldError'] = 'Please enter a price for product';
+    if (isset($data['post']['priceField'])) {
+        $returnData['inputData']['priceField'] = $data['post']['priceField'];
+
+        if (!is_numeric($data['post']['priceField']) || !intval($data['post']['priceField'])) {
+            $returnData['inputError']['priceFieldError'] = 'Please enter a natural number as price for product';
+        }
     }
+
+    return $returnData;
 }
