@@ -17,6 +17,23 @@ if (isset($_POST['logoutButton'])) {
 
 $connection = databaseConnection();
 
+if (isset($_POST['deleteItem'])) {
+    // checking if the item exists
+    $result = query(
+            $connection,
+            'SELECT image_path FROM products WHERE id = ?',
+            [$_POST['idProductDelete']],
+    );
+    if (isset($result[0]['image_path'])) {
+        $response = query(
+                $connection,
+            'DELETE FROM products WHERE id = ?',
+            [$_POST['idProductDelete']]
+        );
+        unlink($result[0]['image_path']);
+    }
+}
+
 $items = query($connection, 'SELECT * FROM products;',[]);
 ?>
 <!DOCTYPE html>
@@ -49,7 +66,7 @@ $items = query($connection, 'SELECT * FROM products;',[]);
                 <td>
                     <form method="post" action="products.php">
                         <input type="hidden" name="idProductDelete" value="<?= $items[$i]['id'] ?>">
-                        <button type="submit" class="linkButton"> <?= translate('Delete') ?> </button>
+                        <button type="submit" class="linkButton" name="deleteItem"> <?= translate('Delete') ?> </button>
                     </form>
                 </td>
             </tr>

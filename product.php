@@ -53,6 +53,7 @@ if (isset($_POST['editButton']) && isset($_POST['idProductEdit'])) {
     // image_path is stored in Session because I need it later,
     // if admin don't choose an image.
     // I cant send it via post because in the ADD_ACTION case there is no need to remember it
+    // so I cant put it in the general template only for that
     $_SESSION['imagePath'] = $productEditInfo[0]['image_path'];
     $defaultImage = true;
 } elseif (isset($_POST['addButton'])) {
