@@ -222,7 +222,9 @@ if (isset($_SESSION['actionType'])) {
                 </button>
             </td>
             <td>
-                <button type="submit" name="submitButton"> <?= translate('Save') ?></button>
+                <button type="submit" name="submitButton">
+                    <?= translate('Save') ?>
+                </button>
             </td>
         </tr>
     </form>

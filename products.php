@@ -30,6 +30,7 @@ if (isset($_POST['deleteItem'])) {
             'DELETE FROM products WHERE id = ?',
             [$_POST['idProductDelete']]
         );
+        // deleting the image from directory
         unlink($result[0]['image_path']);
     }
 }
@@ -79,7 +80,9 @@ $items = query($connection, 'SELECT * FROM products;',[]);
     <tr>
         <td>
             <form method="post" action="product.php">
-                <button type="submit" name="addButton" class="linkButton"> <?= translate('Add') ?> </button>
+                <button type="submit" name="addButton" class="linkButton">
+                    <?= translate('Add') ?>
+                </button>
             </form>
         </td>
         <td>
