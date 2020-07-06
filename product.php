@@ -1,5 +1,7 @@
 <?php
+
 require_once 'common.php';
+
 // check if the user is logged in, if he itsn't then I redirect him to login.php
 if (!isset($_SESSION['username']) || $_SESSION['username'] != ADMIN_CREDENTIALS['USERNAME']) {
     header('Location: login.php');
@@ -9,7 +11,6 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != ADMIN_CREDENTIALS[
 // if admin chooses to go to products I have first to unset some variables
 if (isset($_POST['goToProducts'])) {
 
-    var_dump($_POST);
     if ($_SESSION['actionType'] == EDIT_ACTION) {
         unset($_SESSION['idProductEdit']);
         unset($_SESSION['imagePath']);
@@ -40,9 +41,9 @@ if (isset($_POST['editButton']) && isset($_POST['idProductEdit'])) {
 
     // taking the data from database
     $productEditInfo = query(
-            $connection,
-            'SELECT title, description, price, image_path FROM products WHERE id = ?;',
-            [$_SESSION['idProductEdit']]
+        $connection,
+        'SELECT title, description, price, image_path FROM products WHERE id = ?;',
+        [$_SESSION['idProductEdit']]
     );
     $inputData = [
         'titleField' => $productEditInfo[0]['title'],
@@ -96,7 +97,6 @@ if (isset($_SESSION['actionType'])) {
             }
         }
     } elseif ($_SESSION['actionType'] == EDIT_ACTION) {
-        var_dump($_POST);
         if (isset($_POST['submitButton'])) {
             // validate fields: title, description and price
             $data = validateFields(['inputData' => $inputData, 'inputError' => $inputError, 'post' => $_POST]);
@@ -168,9 +168,11 @@ if (isset($_SESSION['actionType'])) {
                         placeholder="<?= translate('Title') ?>"
                         value="<?= $inputData['titleField'] ?>"
                 >
-                <span class="errorField"> <?= translate(
-                        isset($inputError['titleFieldError']) ? $inputError['titleFieldError'] : ''
-                    ) ?></span>
+                <span class="errorField">
+                    <?= isset($inputError['titleFieldError'])
+                        ? translate($inputError['titleFieldError'])
+                        : '' ?>
+                </span>
             </td>
         </tr>
         <tr>
@@ -181,9 +183,11 @@ if (isset($_SESSION['actionType'])) {
                         placeholder="<?= translate('Description') ?>"
                         value="<?= $inputData['descriptionField'] ?>"
                 >
-                <span class="errorField"> <?= translate(
-                        isset($inputError['descriptionFieldError']) ? $inputError['descriptionFieldError'] : ''
-                    ) ?></span>
+                <span class="errorField">
+                    <?= isset($inputError['descriptionFieldError'])
+                        ? translate($inputError['descriptionFieldError'])
+                        : '' ?>
+                </span>
             </td>
         </tr>
         <tr>
@@ -194,19 +198,21 @@ if (isset($_SESSION['actionType'])) {
                         placeholder="<?= translate('Price') ?>"
                         value="<?= $inputData['priceField'] ?>"
                 >
-                <span class="errorField"> <?= translate(
-                        isset($inputError['priceFieldError']) ? $inputError['priceFieldError'] : ''
-                    ) ?></span>
+                <span class="errorField">
+                    <?= isset($inputError['priceFieldError'])
+                        ? translate($inputError['priceFieldError'])
+                        : '' ?>
+                </span>
             </td>
         </tr>
         <tr>
             <td>
-                <input type="file" name="imageFileField" value=" <?=
-                    isset($_FILES['imageFileField']['tmp_name']) ? $_FILES['imageFileField']['tmp_name'] : ''
-                ?> ">
-                <span class="errorField"> <?= translate(
-                        isset($inputError['imageFileFieldError']) ? $inputError['imageFileFieldError'] : ''
-                    ) ?></span>
+                <input type="file" name="imageFileField">
+                <span class="errorField">
+                    <?= isset($inputError['imageFileFieldError'])
+                        ? translate($inputError['imageFileFieldError'])
+                        : '' ?>
+                </span>
             </td>
         </tr>
         <tr>
@@ -216,7 +222,7 @@ if (isset($_SESSION['actionType'])) {
                 </button>
             </td>
             <td>
-                    <button type="submit" name="submitButton"> <?= translate('Save') ?></button>
+                <button type="submit" name="submitButton"> <?= translate('Save') ?></button>
             </td>
         </tr>
     </form>
