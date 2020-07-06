@@ -40,6 +40,34 @@ if (isset($_POST['idProduct'])) {
         // I use "" because otherwise when I send them on email, \r\n are saw as plain text
         $headers = 'From: ' . SENDER_ADDRESS . "\r\n" . 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
+        $dateTime = date('Y-m-d H-i-s');
+        // inserting data in order_details table
+        $result = query(
+            $connection,
+            'INSERT INTO order_details (creation_date, name, address, comments)
+             VALUES (?, ?, ?, ?);',
+            [
+                $dateTime,
+                $inputData['nameField'],
+                $inputData['addressField'],
+                $inputData['commentsField'],
+            ]
+        );
+
+        // get the id from the last inserted row
+        $orderLastId = $connection->lastInsertId();
+
+        // insert into order_products the products from the current order
+        foreach (array_keys($myCart) as $idProduct) {
+            $result = query(
+                    $connection,
+                    'INSERT INTO order_products (id_order, id_product) VALUES (?, ?);',
+                    [
+                            $orderLastId,
+                            $idProduct,
+                    ]
+            );
+        }
         // sending the mail
         mail($inputData['addressField'], 'Your Cart', $htmlPage, $headers);
 
