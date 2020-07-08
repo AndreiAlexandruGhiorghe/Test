@@ -111,3 +111,19 @@ function validateFields($data): array
 
     return $returnData;
 }
+
+// check if the user is logged in, if he itsn't then I redirect him to login.php
+function checkAuthorization()
+{
+    if (!isset($_SESSION['username']) || $_SESSION['username'] != ADMIN_CREDENTIALS['USERNAME']) {
+        header('Location: login.php');
+        die();
+    }
+}
+
+function doLogout()
+{
+    unset($_SESSION['username']);
+    header('Location: login.php');
+    die();
+}
