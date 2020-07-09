@@ -152,8 +152,8 @@ if (isset($_POST['submitButton'])) {
         // and tha function it changes the default value of the label to
         // the actual value of the input file
         function changeLabel() {
-            var asta = document.getElementById('inputFileId').value
-            var aux = asta.split('\\')[asta.split('\\').length - 1]
+            var asta = document.getElementById('inputFileId').value;
+            var aux = asta.split('\\')[asta.split('\\').length - 1];
             document.getElementById('labelId').innerText = aux;
         }
     </script>
