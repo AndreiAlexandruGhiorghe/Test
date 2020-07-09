@@ -54,7 +54,7 @@ if (count($order)) {
             <td>
                 <p>
                     <?= translate('Name: ') ?>
-                    <?= translate($order['creation_date']) ?>
+                    <?= $order['creation_date'] ?>
                 </p>
             </td>
         </tr>
@@ -62,7 +62,7 @@ if (count($order)) {
             <td>
                 <p>
                     <?= translate('Name: ') ?>
-                    <?= translate($order['name']) ?>
+                    <?= $order['name'] ?>
                 </p>
             </td>
         </tr>
@@ -70,7 +70,7 @@ if (count($order)) {
             <td>
                 <p>
                     <?= translate('Address: ') ?>
-                    <?= translate($order['address']) ?>
+                    <?= $order['address'] ?>
                 </p>
             </td>
         </tr>
@@ -78,7 +78,7 @@ if (count($order)) {
             <td>
                 <p>
                     <?= translate('Comments: ') ?>
-                    <?= translate($order['comments']) ?>
+                    <?= $order['comments'] ?>
                 </p>
             </td>
         </tr>

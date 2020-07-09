@@ -226,7 +226,7 @@ if (isset($_POST['submitButton'])) {
                                     $string = ($string) ? $string : [translate('Error: Please Choose a Image')];
                                     echo $string[count($string) - 1];
                                 } else {
-                                    echo 'Choose an Image: Click Here!';
+                                    echo translate('Choose an Image: Click Here!');
                                 }
                                 ?>
                         </label>
