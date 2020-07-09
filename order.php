@@ -34,54 +34,54 @@ if (count($order)) {
 <body>
 <table id="contentTable">
     <tbody>
-    <?php for ($i = 0; $i < count($orderItems); $i++): ?>
-        <tr class="elementOfTable">
+        <?php for ($i = 0; $i < count($orderItems); $i++): ?>
+            <tr class="elementOfTable">
+                <td>
+                    <img
+                            class="phoneImage"
+                            src="<?= 'http://localhost/Test/' . $orderItems[$i]['image_path'] ?>"
+                    >
+                </td>
+                <td>
+                    <?= $orderItems[$i]['title'] ?><br>
+                    <?= $orderItems[$i]['description'] ?><br>
+                    <?= $orderItems[$i]['price'] ?><?= translate('lei') ?><br>
+                </td>
+            </tr>
+            <br>
+        <?php endfor; ?>
+        <tr>
             <td>
-                <img
-                        class="phoneImage"
-                        src="<?= 'http://localhost/Test/' . $orderItems[$i]['image_path'] ?>"
-                >
-            </td>
-            <td>
-                <?= $orderItems[$i]['title'] ?><br>
-                <?= $orderItems[$i]['description'] ?><br>
-                <?= $orderItems[$i]['price'] ?><?= translate('lei') ?><br>
+                <p>
+                    <?= translate('Name: ') ?>
+                    <?= translate($order['creation_date']) ?>
+                </p>
             </td>
         </tr>
-        <br>
-    <?php endfor; ?>
-    <tr>
-        <td>
-            <p>
-                <?= translate('Name: ') ?>
-                <?= translate($order['creation_date']) ?>
-            </p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>
-                <?= translate('Name: ') ?>
-                <?= translate($order['name']) ?>
-            </p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>
-                <?= translate('Address: ') ?>
-                <?= translate($order['address']) ?>
-            </p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>
-                <?= translate('Comments: ') ?>
-                <?= translate($order['comments']) ?>
-            </p>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                <p>
+                    <?= translate('Name: ') ?>
+                    <?= translate($order['name']) ?>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    <?= translate('Address: ') ?>
+                    <?= translate($order['address']) ?>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    <?= translate('Comments: ') ?>
+                    <?= translate($order['comments']) ?>
+                </p>
+            </td>
+        </tr>
     </tbody>
 </table>
 </body>
