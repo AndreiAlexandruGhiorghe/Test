@@ -18,6 +18,7 @@ $translation = ($translation !== null && $translation !== false) ? $translation 
 
 fclose($jsonFile);
 
+
 function query($connection, $query, $params): array
 {
     // the query has "?" as a placeholder for params
@@ -86,30 +87,6 @@ function extractProducts($connection, $myCart, $typeOfProduct): array
     }
 
     return $items;
-}
-
-function validateFields($data): array
-{
-    $returnData = ['inputData' => $data['inputData'], 'inputError' => []];
-    if (isset($data['post']['titleField']) && $data['post']['titleField']) {
-        $returnData['inputData']['titleField'] = $data['post']['titleField'];
-    } else {
-        $returnData['inputError']['titleFieldError'] = 'Please enter a title for product';
-    }
-    if (isset($data['post']['descriptionField']) && $data['post']['descriptionField']) {
-        $returnData['inputData']['descriptionField'] = $data['post']['descriptionField'];
-    } else {
-        $returnData['inputError']['descriptionFieldError'] = 'Please enter a description for product';
-    }
-    if (isset($data['post']['priceField'])) {
-        $returnData['inputData']['priceField'] = $data['post']['priceField'];
-
-        if (!is_numeric($data['post']['priceField']) || !intval($data['post']['priceField'])) {
-            $returnData['inputError']['priceFieldError'] = 'Please enter a natural number as price for product';
-        }
-    }
-
-    return $returnData;
 }
 
 // check if the user is logged in, if he itsn't then I redirect him to login.php
