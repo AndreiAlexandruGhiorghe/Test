@@ -2,6 +2,8 @@
 
 require_once 'common.php';
 
+checkAuthorization();
+
 $connection = databaseConnection();
 
 $order = query(
