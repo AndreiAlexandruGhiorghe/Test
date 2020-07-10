@@ -25,14 +25,13 @@ $inputData = [
 // the errors from the admin's input
 $inputError = [];
 
-if (isset($_POST['idProductEdit'])) {
-    $idProductEdit = intval($_POST['idProductEdit']);
-}
-if (isset($_POST['oldImagePath'])) {
-    $oldImagePath = $_POST['oldImagePath'];
-}
+$idProductEdit = (!isset($_GET['idProductEdit']))
+    ? null
+    : intval($_GET['idProductEdit']);
 
-if (isset($_POST['editButton'])) {
+$oldImagePath = (!isset($_GET['oldImagePath'])) ? null: $_GET['oldImagePath'];
+
+if (isset($_GET['idProductEdit']) && !isset($_GET['oldImagePath'])) {
     $productEditInfo = query(
         $connection,
         'SELECT title, description, price, image_path FROM products WHERE id = ?;',
@@ -140,6 +139,11 @@ if (isset($_POST['submitButton'])) {
         }
     }
 }
+echo $oldImagePath;
+// the replacement text for input file (choose a file)
+$inputFileMessage = explode('/', $oldImagePath);
+$inputFileMessage = ($inputFileMessage) ? $inputFileMessage : [translate('Error: Please Choose a Image')];
+$inputFileMessage = $inputFileMessage[count($inputFileMessage) - 1];
 ?>
 <!DOCTYPE html>
 <html>
@@ -161,7 +165,12 @@ if (isset($_POST['submitButton'])) {
 <body onload="LoadValue();">
     <table id="contentTable">
         <tbody>
-            <form action="product.php" method="POST" enctype="multipart/form-data">
+            <form
+                    action="product.php
+                            ?idProductEdit=<?= isset($idProductEdit) ? $idProductEdit : '' ?>
+                            ?oldImagePath=<?= isset($oldImagePath) ? $oldImagePath : '' ?>"
+                    method="POST"
+                    enctype="multipart/form-data">
                 <tr>
                     <td>
                         <input
@@ -209,26 +218,10 @@ if (isset($_POST['submitButton'])) {
                 </tr>
                 <tr>
                     <td>
-                        <input
-                                type="hidden"
-                                name="idProductEdit"
-                                value="<?= isset($idProductEdit) ? $idProductEdit : '' ?>"
-                        >
-                        <input
-                                type="hidden"
-                                name="oldImagePath"
-                                value="<?= isset($oldImagePath) ? $oldImagePath : '' ?>"
-                        >
                         <label for="inputFileId" id="labelId" name="labelId">
-                                <?php
-                                if (isset($oldImagePath) && $oldImagePath) {
-                                    $string = explode('/', $oldImagePath);
-                                    $string = ($string) ? $string : [translate('Error: Please Choose a Image')];
-                                    echo $string[count($string) - 1];
-                                } else {
-                                    echo translate('Choose an Image: Click Here!');
-                                }
-                                ?>
+                                <?= (isset($oldImagePath) && $oldImagePath)
+                                    ? $inputFileMessage
+                                    : translate('Choose an Image: Click Here!'); ?>
                         </label>
                         <input onchange="changeLabel()" type="file" id="inputFileId" style="display:none" name="fileField">
                         <span class="errorField">
