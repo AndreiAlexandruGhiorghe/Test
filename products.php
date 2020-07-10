@@ -17,18 +17,16 @@ if (isset($_POST['deleteItem'])) {
     $result = query(
             $connection,
             'SELECT image_path FROM products WHERE id = ?',
-            [$_POST['idProductDelete']],
-    );
-    if (isset($result[0]['image_path'])) {
-        $response = query(
-                $connection,
-            'DELETE FROM products WHERE id = ?',
             [$_POST['idProductDelete']]
-        );
-        // deleting the image from directory with checking
-        if (file_exists($result[0]['image_path'])) {
-            unlink($result[0]['image_path']);
-        }
+    );
+    $response = query(
+        $connection,
+        'DELETE FROM products WHERE id = ?',
+        [$_POST['idProductDelete']]
+    );
+    // deleting the image from directory with checking
+    if (isset($result[0]['image_path']) && file_exists($result[0]['image_path'])) {
+        unlink($result[0]['image_path']);
     }
     header('Location: products.php');
     die();
@@ -57,15 +55,10 @@ $items = query($connection, 'SELECT * FROM products;',[]);
                         <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
                     </td>
                     <td>
-                        <form method="post" action="product.php">
-                            <input type="hidden" name="idProductEdit" value="<?= $items[$i]['id'] ?>">
-                            <button type="submit" class="linkButton" name="editButton">
-                                <?= translate('Edit') ?>
-                            </button>
-                        </form>
+                        <a href="product.php?idProductEdit=<?= $items[$i]['id'] ?>">Clickhere!</a>
                     </td>
                     <td>
-                        <form method="post" action="products.php">
+                        <form method="POST" action="products.php">
                             <input type="hidden" name="idProductDelete" value="<?= $items[$i]['id'] ?>">
                             <button type="submit" class="linkButton" name="deleteItem">
                                 <?= translate('Delete') ?>
