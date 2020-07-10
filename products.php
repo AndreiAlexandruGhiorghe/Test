@@ -32,7 +32,7 @@ if (isset($_POST['deleteItem'])) {
     die();
 }
 
-$items = query($connection, 'SELECT * FROM products;',[]);
+$items = query($connection, 'SELECT * FROM products;');
 ?>
 <!DOCTYPE html>
 <html>

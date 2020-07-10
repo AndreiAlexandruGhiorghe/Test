@@ -19,7 +19,7 @@ $translation = ($translation !== null && $translation !== false) ? $translation 
 fclose($jsonFile);
 
 
-function query($connection, $query, $params): array
+function query($connection, $query, $params = []): array
 {
     // the query has "?" as a placeholder for params
     $stmt = $connection->prepare($query);

@@ -7,7 +7,7 @@ $connection = databaseConnection();
 $order = query(
     $connection,
     'SELECT * FROM order_details WHERE id = ?;',
-    [$_POST['idOrder']]
+    [isset($_GET['idOrder']) ? $_GET['idOrder'] : 0]
 );
 if (count($order)) {
     $order = $order[0];
@@ -15,8 +15,9 @@ if (count($order)) {
     $orderItems = query(
         $connection,
         'SELECT p.id, p.title, p.description, p.price, p.image_path 
-    FROM order_products o_p JOIN products p ON o_p.id_product = p.id
-    WHERE o_p.id_order = ?;',
+         FROM order_products o_p
+         JOIN products p ON o_p.id_product = p.id
+         WHERE o_p.id_order = ?;',
         [$order['id']]
     );
 } else {

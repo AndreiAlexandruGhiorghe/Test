@@ -2,34 +2,37 @@
 
 require_once 'common.php';
 
+checkAuthorization();
+
 $connection = databaseConnection();
 
 $orderList = query(
     $connection,
-    'SELECT * FROM order_details;',
-    []
+    'SELECT id FROM order_details;'
+);
+
+$items = query(
+    $connection,
+    'SELECT p.id, p.price, o_P.id_order
+     FROM order_products o_p 
+     JOIN products p ON o_p.id_product = p.id'
 );
 
 $itemsOfOrders = [];
 foreach ($orderList as $order) {
     // order['id'] is the id from the order_detail table
-    $orderItems = query(
-        $connection,
-        'SELECT p.id, p.title, p.description, p.price, p.image_path 
-        FROM order_products o_p JOIN products p ON o_p.id_product = p.id
-        WHERE o_p.id_order = ?;',
-        [$order['id']]
-    );
+    $sum = 0;
+    foreach ($items as $item) {
+        $sum = ($item['id_order'] == $order['id']) ? $sum + $item['price'] : $sum;
+    }
     // the index is the id of the order
-    $itemsOfOrders[$order['id']] = $orderItems;
+    $itemsOfOrders[$order['id']]['totalPrice'] = $sum;
 }
 
 // if I have no orders I dont need to load the html part
 if (!count($itemsOfOrders)) {
     die();
 }
-
-$sum = 0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,83 +42,27 @@ $sum = 0;
     <title><?= translate('Cart Page') ?></title>
 </head>
 <body>
-<?php foreach ($orderList as $order): ?>
-    <table id="contentTable">
-        <tbody>
-            <?php for ($i = 0; $i < count($itemsOfOrders[$order['id']]); $i++): ?>
-                <tr class="elementOfTable">
+    <?php foreach ($orderList as $order): ?>
+        <table id="contentTable">
+            <tbody>
+                <tr>
                     <td>
-                        <img
-                            class="phoneImage"
-                            src="<?= 'http://localhost/Test/' . $itemsOfOrders[$order['id']][$i]['image_path'] ?>"
-                        >
-                    </td>
-                    <td>
-                        <?= $itemsOfOrders[$order['id']][$i]['title'] ?><br>
-                        <?= $itemsOfOrders[$order['id']][$i]['description'] ?><br>
-                        <?php
-                        $sum += $itemsOfOrders[$order['id']][$i]['price'];
-                        echo $itemsOfOrders[$order['id']][$i]['price'];
-                        ?>
-                        <?= translate('lei') ?><br>
+                        <p>
+                            <?= translate('Total price: ') ?>
+                            <?= $itemsOfOrders[$order['id']]['totalPrice'] ?>
+                            <?= translate(' lei') ?>
+                        </p>
                     </td>
                 </tr>
-                <br>
-            <?php endfor; ?>
-            <tr>
-                <td>
-                    <p>
-                        <?= translate('Name: ') ?>
-                        <?= $order['creation_date'] ?>
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>
-                        <?= translate('Name: ') ?>
-                        <?= $order['name'] ?>
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>
-                        <?= translate('Address: ') ?>
-                        <?= $order['address'] ?>
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>
-                        <?= translate('Comments: ') ?>
-                        <?= $order['comments'] ?>
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>
-                        <?= translate('Total price: ') ?>
-                        <?php
-                        echo $sum;
-                        $sum = 0;
-                        ?>
-                        <?= translate(' lei') ?>
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <form action="order.php" method="POST">
-                        <input type="hidden" name="idOrder" value="<?= $order['id'] ?>">
-                        <input type="submit" name="submitButton" value="checkout">
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-<?php endforeach; ?>
+                <tr>
+                    <td>
+                        <a href="order.php?idOrder=<?= $order['id'] ?>" class="linkButton">
+                            <?= translate('See Order\'s details') ?>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    <?php endforeach; ?>
 </body>
 </html>
