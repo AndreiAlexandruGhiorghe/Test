@@ -5,12 +5,6 @@ require_once 'common.php';
 // check if the user is logged in, if he itsn't then I redirect him to login.php
 checkAuthorization();
 
-// if admin chooses to go to products I have first to unset some variables
-if (isset($_POST['goToProducts'])) {
-    header("Location: products.php");
-    die();
-}
-
 // the connection with server
 $connection = databaseConnection();
 
@@ -139,7 +133,6 @@ if (isset($_POST['submitButton'])) {
         }
     }
 }
-echo $oldImagePath;
 // the replacement text for input file (choose a file)
 $inputFileMessage = explode('/', $oldImagePath);
 $inputFileMessage = ($inputFileMessage) ? $inputFileMessage : [translate('Error: Please Choose a Image')];
@@ -233,9 +226,9 @@ $inputFileMessage = $inputFileMessage[count($inputFileMessage) - 1];
                 </tr>
                 <tr>
                     <td>
-                        <button type="submit" name="goToProducts" class="linkButton">
-                            <?= translate('products') ?>
-                        </button>
+                        <a href="products.php">
+                            <?= translate('Products') ?>
+                        </a>
                     </td>
                     <td>
                         <button type="submit" name="submitButton">

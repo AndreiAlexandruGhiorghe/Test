@@ -55,7 +55,9 @@ $items = query($connection, 'SELECT * FROM products;');
                         <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
                     </td>
                     <td>
-                        <a href="product.php?idProductEdit=<?= $items[$i]['id'] ?>">Clickhere!</a>
+                        <a href="product.php?idProductEdit=<?= $items[$i]['id'] ?>">
+                            <?= translate('Edit') ?>
+                        </a>
                     </td>
                     <td>
                         <form method="POST" action="products.php">
@@ -70,11 +72,9 @@ $items = query($connection, 'SELECT * FROM products;');
             <?php endfor; ?>
             <tr>
                 <td>
-                    <form method="post" action="product.php">
-                        <button type="submit" name="addButton" class="linkButton">
-                            <?= translate('Add') ?>
-                        </button>
-                    </form>
+                    <a href="product.php" class="linkButton">
+                        <?= translate('Add') ?>
+                    </a>
                 </td>
                 <td>
                     <form method="post" action="products.php">
