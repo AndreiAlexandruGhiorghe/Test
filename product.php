@@ -20,15 +20,11 @@ $productDetails = query(
 
 // admin input
 $inputData = [
-    'titleField' => (isset($productDetails[0]['title']) && isset($idProductEdit))
-                        ? $productDetails[0]['title']
-                        : '',
+    'titleField' => (isset($productDetails[0]['title']) && isset($idProductEdit)) ? $productDetails[0]['title'] : '',
     'descriptionField' => (isset($productDetails[0]['description']) && isset($idProductEdit))
                                 ? $productDetails[0]['description']
                                 : '',
-    'priceField' => (isset($productDetails[0]['price']) && isset($idProductEdit))
-                            ? $productDetails[0]['price']
-                            : '',
+    'priceField' => (isset($productDetails[0]['price']) && isset($idProductEdit)) ? $productDetails[0]['price'] : '',
     'imageNameField' => (isset($productDetails[0]['image_path']) && isset($idProductEdit))
                                 ? pathToName($productDetails[0]['image_path'])
                                 : '',
@@ -62,8 +58,8 @@ if (isset($_POST['submitButton'])) {
         $inputData['imageLocation'] = $_FILES['fileField']['tmp_name'];
         $inputData['imageNameField'] = $_FILES['fileField']['name'];
     } elseif (!isset($productDetails[0]['image_path'])) {
-        // if I don't have something in $_FILES and I don't have an old image set, then
-        // it means I have no image for the product
+        // if I don't have something in $_FILES and I don't have an image in databaser,
+        // then it means I have no image for the product
         $inputError['imageFileFieldError'] = 'Please choose an image for the product';
     }
 
@@ -109,11 +105,7 @@ if (isset($_POST['submitButton'])) {
                 ];
             }
             // the execution of the query
-            $response = query(
-                $connection,
-                $queryString,
-                $paramQuery
-            );
+            $response = query($connection, $queryString, $paramQuery);
 
             // when the admin chooses a new image we have to delete the old one
             if (!(isset($productDetails[0]['image_path'])
