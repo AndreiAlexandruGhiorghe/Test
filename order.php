@@ -55,7 +55,7 @@ $order = query(
             <td>
                 <p>
                     <?= translate('Creation date: ') ?>
-                    <?= $order[0]['creation_date'] ?>
+                    <?= isset($order[0]['creation_date']) ? $order[0]['creation_date'] : '' ?>
                 </p>
             </td>
         </tr>
@@ -63,7 +63,7 @@ $order = query(
             <td>
                 <p>
                     <?= translate('Name: ') ?>
-                    <?= $order[0]['name'] ?>
+                    <?= isset($order[0]['name']) ? $order[0]['name'] : '' ?>
                 </p>
             </td>
         </tr>
@@ -71,7 +71,7 @@ $order = query(
             <td>
                 <p>
                     <?= translate('Address: ') ?>
-                    <?= $order[0]['address'] ?>
+                    <?= isset($order[0]['address']) ? $order[0]['address'] : '' ?>
                 </p>
             </td>
         </tr>
@@ -79,7 +79,7 @@ $order = query(
             <td>
                 <p>
                     <?= translate('Comments: ') ?>
-                    <?= $order[0]['comments'] ?>
+                    <?= isset($order[0]['comments']) ? $order[0]['comments'] : '' ?>
                 </p>
             </td>
         </tr>
