@@ -8,24 +8,22 @@ $connection = databaseConnection();
 
 $order = query(
     $connection,
-    'SELECT * FROM order_details WHERE id = ?;',
+    'SELECT
+            p.id,
+            p.title,
+            p.description,
+            p.price,
+            p.image_path,
+            o_d.name,
+            o_d.address,
+            o_d.comments,
+            o_d.creation_date
+     FROM order_products o_p
+     JOIN products p ON o_p.id_product = p.id
+     JOIN order_details o_d ON o_p.id_order = o_d.id
+     WHERE o_d.id = ?',
     [isset($_GET['idOrder']) ? $_GET['idOrder'] : 0]
 );
-if (count($order)) {
-    $order = $order[0];
-
-    $orderItems = query(
-        $connection,
-        'SELECT p.id, p.title, p.description, p.price, p.image_path 
-         FROM order_products o_p
-         JOIN products p ON o_p.id_product = p.id
-         WHERE o_p.id_order = ?;',
-        [$order['id']]
-    );
-} else {
-    die();
-}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,18 +35,18 @@ if (count($order)) {
 <body>
 <table id="contentTable">
     <tbody>
-        <?php for ($i = 0; $i < count($orderItems); $i++): ?>
+        <?php for ($i = 0; $i < count($order); $i++): ?>
             <tr class="elementOfTable">
                 <td>
                     <img
                             class="phoneImage"
-                            src="<?= 'http://localhost/Test/' . $orderItems[$i]['image_path'] ?>"
+                            src="<?= 'http://localhost/Test/' . $order[$i]['image_path'] ?>"
                     >
                 </td>
                 <td>
-                    <?= $orderItems[$i]['title'] ?><br>
-                    <?= $orderItems[$i]['description'] ?><br>
-                    <?= $orderItems[$i]['price'] ?><?= translate('lei') ?><br>
+                    <?= $order[$i]['title'] ?><br>
+                    <?= $order[$i]['description'] ?><br>
+                    <?= $order[$i]['price'] ?><?= translate('lei') ?><br>
                 </td>
             </tr>
             <br>
@@ -56,8 +54,8 @@ if (count($order)) {
         <tr>
             <td>
                 <p>
-                    <?= translate('Name: ') ?>
-                    <?= $order['creation_date'] ?>
+                    <?= translate('Creation date: ') ?>
+                    <?= $order[0]['creation_date'] ?>
                 </p>
             </td>
         </tr>
@@ -65,7 +63,7 @@ if (count($order)) {
             <td>
                 <p>
                     <?= translate('Name: ') ?>
-                    <?= $order['name'] ?>
+                    <?= $order[0]['name'] ?>
                 </p>
             </td>
         </tr>
@@ -73,7 +71,7 @@ if (count($order)) {
             <td>
                 <p>
                     <?= translate('Address: ') ?>
-                    <?= $order['address'] ?>
+                    <?= $order[0]['address'] ?>
                 </p>
             </td>
         </tr>
@@ -81,7 +79,7 @@ if (count($order)) {
             <td>
                 <p>
                     <?= translate('Comments: ') ?>
-                    <?= $order['comments'] ?>
+                    <?= $order[0]['comments'] ?>
                 </p>
             </td>
         </tr>
