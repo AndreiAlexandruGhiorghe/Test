@@ -104,3 +104,13 @@ function doLogout()
     header('Location: login.php');
     die();
 }
+
+function pathToName($path)
+{
+    $aux = explode('/', $path);
+    $aux = ($aux)
+        ? $aux[count($aux) - 1]
+        : '';
+
+    return $aux;
+}

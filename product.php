@@ -8,35 +8,34 @@ checkAuthorization();
 // the connection with server
 $connection = databaseConnection();
 
+// whenever I execute a query like select...where id = 0 from the database will return []
+//instead of a error
+$idProductEdit = (!isset($_GET['idProductEdit'])) ? 0 : intval($_GET['idProductEdit']);
+
+$productDetails = query(
+        $connection,
+        'SELECT * FROM products WHERE id = ?;',
+        [$idProductEdit]
+);
+
 // admin input
 $inputData = [
-    'titleField' => '',
-    'descriptionField' => '',
-    'priceField' => '',
-    'imageNameField' => '',
+    'titleField' => (isset($productDetails[0]['title']) && isset($idProductEdit))
+                        ? $productDetails[0]['title']
+                        : '',
+    'descriptionField' => (isset($productDetails[0]['description']) && isset($idProductEdit))
+                                ? $productDetails[0]['description']
+                                : '',
+    'priceField' => (isset($productDetails[0]['price']) && isset($idProductEdit))
+                            ? $productDetails[0]['price']
+                            : '',
+    'imageNameField' => (isset($productDetails[0]['image_path']) && isset($idProductEdit))
+                                ? pathToName($productDetails[0]['image_path'])
+                                : '',
 ];
 
 // the errors from the admin's input
 $inputError = [];
-
-$idProductEdit = (!isset($_GET['idProductEdit'])) ? null : intval($_GET['idProductEdit']);
-
-$oldImagePath = (!isset($_GET['oldImagePath'])) ? null: $_GET['oldImagePath'];
-
-if (isset($_GET['idProductEdit']) && !isset($_GET['oldImagePath'])) {
-    $productEditInfo = query(
-        $connection,
-        'SELECT title, description, price, image_path FROM products WHERE id = ?;',
-        [$idProductEdit]
-    );
-    $inputData = [
-        'titleField' => isset($productEditInfo[0]['title']) ? $productEditInfo[0]['title'] : '',
-        'descriptionField' => isset($productEditInfo[0]['description']) ? $productEditInfo[0]['description'] : '',
-        'priceField' => isset($productEditInfo[0]['price']) ? $productEditInfo[0]['price'] : '',
-        'imageNameField' => '',
-    ];
-    $oldImagePath = isset($productEditInfo[0]['image_path']) ? $productEditInfo[0]['image_path'] : '';
-}
 
 if (isset($_POST['submitButton'])) {
     // validate fields: title, description and price
@@ -61,8 +60,8 @@ if (isset($_POST['submitButton'])) {
     // validate the files input
     if (isset($_FILES['fileField']) && $_FILES['fileField']['tmp_name']) {
         $inputData['imageLocation'] = $_FILES['fileField']['tmp_name'];
-        $inputData['imageName'] = $_FILES['fileField']['name'];
-    } elseif (!(isset($oldImagePath) && $oldImagePath)) {
+        $inputData['imageNameField'] = $_FILES['fileField']['name'];
+    } elseif (!isset($productDetails[0]['image_path'])) {
         // if I don't have something in $_FILES and I don't have an old image set, then
         // it means I have no image for the product
         $inputError['imageFileFieldError'] = 'Please choose an image for the product';
@@ -72,7 +71,7 @@ if (isset($_POST['submitButton'])) {
     if (!count($inputError)) {
         // idProductEdit is equal 0 when there is no product for editing
         if (!$idProductEdit) {
-            $imagePath = 'images/' . time() . $inputData['imageName'];
+            $imagePath = 'images/' . time() . $inputData['imageNameField'];
             $response = query(
                 $connection,
                 'INSERT INTO products (title, description, price, image_path) VALUES (?, ?, ?, ?)',
@@ -87,21 +86,8 @@ if (isset($_POST['submitButton'])) {
             header('Location: products.php');
             die();
         } else {
-            // check if we don't have the old image
-            // if I do not have it that means I have to replace it with the new one
-            if (!(isset($oldImagePath) && $oldImagePath)) {
-                $queryString = 'UPDATE products 
-                                SET title = ?, description = ?, price = ?, image_path = ? 
-                                WHERE id = ?';
-                $imagePath = 'images/' . time() . $inputData['imageName'];
-                $paramQuery = [
-                    $inputData['titleField'],
-                    $inputData['descriptionField'],
-                    intval($inputData['priceField']),
-                    $imagePath,
-                    $idProductEdit,
-                ];
-            } else {
+            // check if my actual image is the old image from db
+            if (isset($productDetails[0]['image_path']) && $inputData['imageNameField'] == pathToName($productDetails[0]['image_path'])) {
                 $queryString = 'UPDATE products SET title = ?, description = ?, price = ? WHERE id = ?';
                 $paramQuery = [
                     $inputData['titleField'],
@@ -109,8 +95,19 @@ if (isset($_POST['submitButton'])) {
                     intval($inputData['priceField']),
                     $idProductEdit,
                 ];
+            } else {
+                $queryString = 'UPDATE products 
+                                SET title = ?, description = ?, price = ?, image_path = ? 
+                                WHERE id = ?';
+                $imagePath = 'images/' . time() . $inputData['imageNameField'];
+                $paramQuery = [
+                    $inputData['titleField'],
+                    $inputData['descriptionField'],
+                    intval($inputData['priceField']),
+                    $imagePath,
+                    $idProductEdit,
+                ];
             }
-
             // the execution of the query
             $response = query(
                 $connection,
@@ -119,11 +116,13 @@ if (isset($_POST['submitButton'])) {
             );
 
             // when the admin chooses a new image we have to delete the old one
-            if (!(isset($oldImagePath) && $oldImagePath)) {
+            if (!(isset($productDetails[0]['image_path'])
+                && $inputData['imageNameField'] == pathToName($productDetails[0]['image_path'])
+            )) {
                 move_uploaded_file($inputData['imageLocation'], $imagePath);
-                // delete the old image\
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
+                // delete the old image
+                if (isset($productDetails[0]['image_path']) && file_exists($productDetails[0]['image_path'])) {
+                    unlink($productDetails[0]['image_path']);
                 }
             }
             header('Location: products.php');
@@ -131,11 +130,6 @@ if (isset($_POST['submitButton'])) {
         }
     }
 }
-// the replacement text for input file (choose a file)
-$inputFileMessage = explode('/', $oldImagePath);
-$inputFileMessage = ($inputFileMessage)
-                    ? $inputFileMessage[count($inputFileMessage) - 1]
-                    : [translate('Error: Please Choose a Image')];
 ?>
 <!DOCTYPE html>
 <html>
@@ -158,9 +152,7 @@ $inputFileMessage = ($inputFileMessage)
     <table id="contentTable">
         <tbody>
             <form
-                    action="product.php
-                            ?idProductEdit=<?= isset($idProductEdit) ? $idProductEdit : '' ?>
-                            ?oldImagePath=<?= isset($oldImagePath) ? $oldImagePath : '' ?>"
+                    action="product.php?idProductEdit=<?= isset($idProductEdit) ? $idProductEdit : '' ?>"
                     method="POST"
                     enctype="multipart/form-data">
                 <tr>
@@ -211,8 +203,8 @@ $inputFileMessage = ($inputFileMessage)
                 <tr>
                     <td>
                         <label for="inputFileId" id="labelId" name="labelId">
-                                <?= (isset($oldImagePath) && $oldImagePath)
-                                    ? $inputFileMessage
+                                <?= ($inputData['imageNameField'])
+                                    ? $inputData['imageNameField']
                                     : translate('Choose an Image: Click Here!'); ?>
                         </label>
                         <input onchange="changeLabel()" type="file" id="inputFileId" style="display:none" name="fileField">
