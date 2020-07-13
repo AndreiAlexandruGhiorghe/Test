@@ -105,12 +105,10 @@ function doLogout()
     die();
 }
 
-function pathToName($path)
+function pathToName($path): string
 {
     $aux = explode('/', $path);
-    $aux = ($aux)
-        ? $aux[count($aux) - 1]
-        : '';
+    $aux = ($aux) ? $aux[count($aux) - 1] : '';
 
     return $aux;
 }
