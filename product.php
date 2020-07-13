@@ -19,9 +19,7 @@ $inputData = [
 // the errors from the admin's input
 $inputError = [];
 
-$idProductEdit = (!isset($_GET['idProductEdit']))
-    ? null
-    : intval($_GET['idProductEdit']);
+$idProductEdit = (!isset($_GET['idProductEdit'])) ? null : intval($_GET['idProductEdit']);
 
 $oldImagePath = (!isset($_GET['oldImagePath'])) ? null: $_GET['oldImagePath'];
 
@@ -32,12 +30,12 @@ if (isset($_GET['idProductEdit']) && !isset($_GET['oldImagePath'])) {
         [$idProductEdit]
     );
     $inputData = [
-        'titleField' => $productEditInfo[0]['title'],
-        'descriptionField' => $productEditInfo[0]['description'],
-        'priceField' => $productEditInfo[0]['price'],
+        'titleField' => isset($productEditInfo[0]['title']) ? $productEditInfo[0]['title'] : '',
+        'descriptionField' => isset($productEditInfo[0]['description']) ? $productEditInfo[0]['description'] : '',
+        'priceField' => isset($productEditInfo[0]['price']) ? $productEditInfo[0]['price'] : '',
         'imageNameField' => '',
     ];
-    $oldImagePath = $productEditInfo[0]['image_path'];
+    $oldImagePath = isset($productEditInfo[0]['image_path']) ? $productEditInfo[0]['image_path'] : '';
 }
 
 if (isset($_POST['submitButton'])) {
@@ -135,8 +133,9 @@ if (isset($_POST['submitButton'])) {
 }
 // the replacement text for input file (choose a file)
 $inputFileMessage = explode('/', $oldImagePath);
-$inputFileMessage = ($inputFileMessage) ? $inputFileMessage : [translate('Error: Please Choose a Image')];
-$inputFileMessage = $inputFileMessage[count($inputFileMessage) - 1];
+$inputFileMessage = ($inputFileMessage)
+                    ? $inputFileMessage[count($inputFileMessage) - 1]
+                    : [translate('Error: Please Choose a Image')];
 ?>
 <!DOCTYPE html>
 <html>
