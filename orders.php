@@ -8,29 +8,15 @@ $connection = databaseConnection();
 
 $orderList = query(
     $connection,
-    'SELECT id FROM order_details;'
+    'SELECT o_d.id, SUM(p.price) totalPrice
+     FROM order_details o_d
+     JOIN order_products o_p ON o_d.id = o_p.id_order
+     JOIN products p ON o_p.id_product = p.id
+     GROUP BY o_d.id;'
 );
-
-$items = query(
-    $connection,
-    'SELECT p.id, p.price, o_P.id_order
-     FROM order_products o_p 
-     JOIN products p ON o_p.id_product = p.id'
-);
-
-$itemsOfOrders = [];
-foreach ($orderList as $order) {
-    // order['id'] is the id from the order_detail table
-    $sum = 0;
-    foreach ($items as $item) {
-        $sum = ($item['id_order'] == $order['id']) ? $sum + $item['price'] : $sum;
-    }
-    // the index is the id of the order
-    $itemsOfOrders[$order['id']]['totalPrice'] = $sum;
-}
 
 // if I have no orders I dont need to load the html part
-if (!count($itemsOfOrders)) {
+if (!count($orderList)) {
     die();
 }
 ?>
@@ -49,7 +35,7 @@ if (!count($itemsOfOrders)) {
                     <td>
                         <p>
                             <?= translate('Total price: ') ?>
-                            <?= $itemsOfOrders[$order['id']]['totalPrice'] ?>
+                            <?= $order['totalPrice'] ?>
                             <?= translate(' lei') ?>
                         </p>
                     </td>
