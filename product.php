@@ -22,15 +22,15 @@ $productDetails = query(
 $inputData = [
     'titleField' => (isset($productDetails[0]['title']) && isset($idProductEdit)) ? $productDetails[0]['title'] : '',
     'descriptionField' => (isset($productDetails[0]['description']) && isset($idProductEdit))
-            ? $productDetails[0]['description']
-            : '',
+        ? $productDetails[0]['description']
+        : '',
     'priceField' => (isset($productDetails[0]['price']) && isset($idProductEdit)) ? $productDetails[0]['price'] : '',
     'imageNameField' => (isset($productDetails[0]['image_path']) && isset($idProductEdit))
-            ? pathToName($productDetails[0]['image_path'])
-            : '',
+        ? pathToName($productDetails[0]['image_path'])
+        : '',
     'inventoryField' => (isset($productDetails[0]['inventory']) && isset($idProductEdit))
-            ? $productDetails[0]['inventory']
-            : '',
+        ? $productDetails[0]['inventory']
+        : '',
 ];
 
 // the errors from the admin's input
@@ -94,7 +94,10 @@ if (isset($_POST['submitButton'])) {
             die();
         } else {
             // check if my actual image is the old image from db
-            if (isset($productDetails[0]['image_path']) && $inputData['imageNameField'] == pathToName($productDetails[0]['image_path'])) {
+            if (
+                    isset($productDetails[0]['image_path'])
+                    && $inputData['imageNameField'] == pathToName($productDetails[0]['image_path'])
+            ) {
                 $queryString = 'UPDATE products SET title = ?, description = ?, price = ?, inventory = ? WHERE id = ?';
                 $paramQuery = [
                     $inputData['titleField'],
@@ -169,7 +172,9 @@ if (isset($_POST['submitButton'])) {
                                 value="<?= $inputData['titleField'] ?>"
                         >
                         <span class="errorField">
-                            <?= isset($inputError['titleFieldError']) ? translate($inputError['titleFieldError']) : '' ?>
+                            <?= isset($inputError['titleFieldError'])
+                                ? translate($inputError['titleFieldError'])
+                                : '' ?>
                         </span>
                     </td>
                 </tr>
@@ -183,8 +188,8 @@ if (isset($_POST['submitButton'])) {
                         >
                         <span class="errorField">
                             <?= isset($inputError['descriptionFieldError'])
-                                    ? translate($inputError['descriptionFieldError'])
-                                    : '' ?>
+                                ? translate($inputError['descriptionFieldError'])
+                                : '' ?>
                         </span>
                     </td>
                 </tr>
@@ -198,8 +203,8 @@ if (isset($_POST['submitButton'])) {
                         >
                         <span class="errorField">
                             <?= isset($inputError['priceFieldError'])
-                                    ? translate($inputError['priceFieldError'])
-                                    : '' ?>
+                                ? translate($inputError['priceFieldError'])
+                                : '' ?>
                         </span>
                     </td>
                 </tr>
@@ -213,8 +218,8 @@ if (isset($_POST['submitButton'])) {
                         >
                         <span class="errorField">
                             <?= isset($inputError['inventoryFieldError'])
-                                    ? translate($inputError['inventoryFieldError'])
-                                    : '' ?>
+                                ? translate($inputError['inventoryFieldError'])
+                                : '' ?>
                         </span>
                     </td>
                 </tr>
@@ -222,14 +227,14 @@ if (isset($_POST['submitButton'])) {
                     <td>
                         <label for="inputFileId" id="labelId" name="labelId">
                                 <?= ($inputData['imageNameField'])
-                                        ? $inputData['imageNameField']
-                                        : translate('Choose an Image: Click Here!'); ?>
+                                    ? $inputData['imageNameField']
+                                    : translate('Choose an Image: Click Here!'); ?>
                         </label>
                         <input onchange="changeLabel()" type="file" id="inputFileId" style="display:none" name="fileField">
                         <span class="errorField">
                             <?= isset($inputError['imageFileFieldError'])
-                                    ? translate($inputError['imageFileFieldError'])
-                                    : '' ?>
+                                ? translate($inputError['imageFileFieldError'])
+                                : '' ?>
                         </span>
                     </td>
                 </tr>

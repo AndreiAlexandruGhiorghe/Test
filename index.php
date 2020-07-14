@@ -1,4 +1,5 @@
 <?php
+
 require_once 'common.php';
 
 $connection = databaseConnection();
@@ -19,8 +20,8 @@ if (
     // add the valid id of the product to cart
     // the key is the id of the product and the value is the quantity
     $myCart[intval($_POST['idProduct'])] = isset($myCart[intval($_POST['idProduct'])])
-            ? $myCart[intval($_POST['idProduct'])] + 1
-            : 1;
+        ? $myCart[intval($_POST['idProduct'])] + 1
+        : 1;
     $_SESSION['myCart'] = $myCart;
     header('Location: index.php');
     die();

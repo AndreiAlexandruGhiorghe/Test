@@ -8,11 +8,11 @@ $connection = databaseConnection();
 
 $orderList = query(
     $connection,
-    'SELECT o_d.id, SUM(p.price) totalPrice
+    'SELECT o_d.id, SUM(p.price * o_p.quantity) totalPrice
      FROM order_details o_d
      JOIN order_products o_p ON o_d.id = o_p.id_order
      JOIN products p ON o_p.id_product = p.id
-     GROUP BY o_d.id;'
+     GROUP BY o_d.id'
 );
 
 // if I have no orders I dont need to load the html part
