@@ -80,7 +80,7 @@ if (isset($_POST['submitButton'])) {
             $imagePath = 'images/' . time() . $inputData['imageNameField'];
             $response = query(
                 $connection,
-                'INSERT INTO products (title, description, price, image_path) VALUES (?, ?, ?, ?, ?)',
+                'INSERT INTO products (title, description, price, image_path, inventory) VALUES (?, ?, ?, ?, ?)',
                 [
                     $inputData['titleField'],
                     $inputData['descriptionField'],
