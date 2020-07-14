@@ -113,77 +113,76 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
 
 <table id="contentTable">
     <tbody>
-    <?php for ($i = 0; $i < count($items); $i++): ?>
-        <tr class="elementOfTable">
-            <td>
-                <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
-            </td>
-            <td>
-                <?= $items[$i]['title'] ?><br>
-                <?= $items[$i]['description'] ?><br>
-                <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
-                <?= $myCart[$items[$i]['id']]?> <?= translate('products') ?><br>
-            </td>
-            <td>
-                <form method="post" action="cart.php">
-                    <input type="hidden" name="idProduct" value="<?= $items[$i]['id'] ?>">
-                    <button type="submit" class="linkButton"> <?= translate('Remove') ?> </button>
-                </form>
-            </td>
-        </tr>
-        <br>
-    <?php endfor; ?>
-    <form action="cart.php" method="POST">
-        <tr>
-            <td>
-                <input
+        <?php for ($i = 0; $i < count($items); $i++): ?>
+            <tr class="elementOfTable">
+                <td>
+                    <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
+                </td>
+                <td>
+                    <?= $items[$i]['title'] ?><br>
+                    <?= $items[$i]['description'] ?><br>
+                    <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
+                    <?= $myCart[$items[$i]['id']]?> <?= translate('products') ?><br>
+                </td>
+                <td>
+                    <form method="post" action="cart.php">
+                        <input type="hidden" name="idProduct" value="<?= $items[$i]['id'] ?>">
+                        <button type="submit" class="linkButton"> <?= translate('Remove') ?> </button>
+                    </form>
+                </td>
+            </tr>
+            <br>
+        <?php endfor; ?>
+        <form action="cart.php" method="POST">
+            <tr>
+                <td>
+                    <input
+                            class="inputType"
+                            type="text"
+                            name="nameField"
+                            placeholder="<?= translate('Name') ?>"
+                            value="<?= $inputData['nameField'] ?>"
+                    >
+                    <span class="errorField"> <?=
+                        isset($inputErrors['nameFieldError']) ?
+                            '* ' . translate($inputErrors['nameFieldError']) : ''
+                        ?></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input
+                            class="inputType"
+                            type="text"
+                            name="addressField"
+                            placeholder="<?= translate('Contact deatails') ?>"
+                            value="<?= $inputData['addressField'] ?>"
+                    >
+                    <span class="errorField">
+                        <?= isset($inputErrors['addressFieldError']) ? '* ' . translate($inputErrors['addressFieldError']) : '' ?>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <textarea
+                        id="commentsSection"
                         class="inputType"
                         type="text"
-                        name="nameField"
-                        placeholder="<?= translate('Name') ?>"
-                        value="<?= $inputData['nameField'] ?>"
+                        name="commentsField"
+                        placeholder="<?= translate('Comments') ?>"
                 >
-                <span class="errorField"> <?=
-                    isset($inputErrors['nameFieldError']) ?
-                        '* ' . translate($inputErrors['nameFieldError']) : ''
-                    ?></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input
-                        class="inputType"
-                        type="text"
-                        name="addressField"
-                        placeholder="<?= translate('Contact deatails') ?>"
-                        value="<?= $inputData['addressField'] ?>"
-                >
-                <span class="errorField"> <?=
-                    isset($inputErrors['addressFieldError']) ?
-                        '* ' . translate($inputErrors['addressFieldError']) : ''
-                    ?></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-            <textarea
-                    id="commentsSection"
-                    class="inputType"
-                    type="text"
-                    name="commentsField"
-                    placeholder="<?= translate('Comments') ?>"
-            >
-                <?= $inputData['commentsField'] ?>
-            </textarea>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <a href="index.php"><?= translate('Go to index') ?></a>
-                <input type="submit" name="submitButton" value="Checkout">
-            </td>
-        </tr>
-    </form>
+                    <?= $inputData['commentsField'] ?>
+                </textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="index.php"><?= translate('Go to index') ?></a>
+                    <input type="submit" name="submitButton" value="Checkout">
+                </td>
+            </tr>
+        </form>
     </tbody>
 </table>
 </body>

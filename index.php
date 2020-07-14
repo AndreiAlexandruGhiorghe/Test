@@ -19,8 +19,8 @@ if (
     // add the valid id of the product to cart
     // the key is the id of the product and the value is the quantity
     $myCart[intval($_POST['idProduct'])] = isset($myCart[intval($_POST['idProduct'])])
-                                                ? $myCart[intval($_POST['idProduct'])] + 1
-                                                : 1;
+            ? $myCart[intval($_POST['idProduct'])] + 1
+            : 1;
     $_SESSION['myCart'] = $myCart;
     header('Location: index.php');
     die();
@@ -39,34 +39,34 @@ $items = extractProducts($connection, $myCart, ALL_PRODUCTS);
 
 <table id="contentTable">
     <tbody>
-    <?php for ($i = 0; $i < count($items); $i++): ?>
-        <tr class="elementOfTable" style="<?= (
-                (isset($myCart[$items[$i]['id']]) && $items[$i]['inventory'] <= $myCart[$items[$i]['id']])
-                || $items[$i]['inventory'] ==0
-        ) ? 'display:none;' : ''?>">
+        <?php for ($i = 0; $i < count($items); $i++): ?>
+            <tr class="elementOfTable" style="<?= (
+                    (isset($myCart[$items[$i]['id']]) && $items[$i]['inventory'] <= $myCart[$items[$i]['id']])
+                    || $items[$i]['inventory'] ==0
+            ) ? 'display:none;' : ''?>">
+                <td>
+                    <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
+                </td>
+                <td>
+                    <?= $items[$i]['title'] ?><br>
+                    <?= $items[$i]['description'] ?><br>
+                    <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
+                    <?= $items[$i]['inventory'] - (isset($myCart[$items[$i]['id']]) ? $myCart[$items[$i]['id']] : 0) ?>
+                    <?= translate('left') ?><br>
+                </td>
+                <td>
+                    <form method="post" action="index.php">
+                        <input type="hidden" name="idProduct" value="<?= $items[$i]['id'] ?>">
+                        <button type="submit" class="linkButton"> <?= translate('Add') ?> </button>
+                    </form>
+                </td>
+            </tr>
+        <?php endfor; ?>
+        <tr>
             <td>
-                <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
-            </td>
-            <td>
-                <?= $items[$i]['title'] ?><br>
-                <?= $items[$i]['description'] ?><br>
-                <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
-                <?= $items[$i]['inventory'] - (isset($myCart[$items[$i]['id']]) ? $myCart[$items[$i]['id']] : 0) ?>
-                <?= translate('left') ?><br>
-            </td>
-            <td>
-                <form method="post" action="index.php">
-                    <input type="hidden" name="idProduct" value="<?= $items[$i]['id'] ?>">
-                    <button type="submit" class="linkButton"> <?= translate('Add') ?> </button>
-                </form>
+                <a href="cart.php"> <?= translate('Go to cart') ?> </a>
             </td>
         </tr>
-    <?php endfor; ?>
-    <tr>
-        <td>
-            <a href="cart.php"> <?= translate('Go to cart') ?> </a>
-        </td>
-    </tr>
     </tbody>
 </table>
 </body>

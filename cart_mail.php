@@ -31,44 +31,44 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
 
 <table id="contentTable">
     <tbody>
-    <?php for ($i = 0; $i < count($items); $i++): ?>
-        <tr class="elementOfTable">
+        <?php for ($i = 0; $i < count($items); $i++): ?>
+            <tr class="elementOfTable">
+                <td>
+                    <img class="phoneImage" src="<?= 'http://localhost/Test/' . $items[$i]['image_path'] ?>">
+                </td>
+                <td>
+                    <?= $items[$i]['title'] ?><br>
+                    <?= $items[$i]['description'] ?><br>
+                    <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
+                    <?= $myCart[$items[$i]['id']]?> <?= translate('products') ?><br>
+                </td>
+            </tr>
+            <br>
+        <?php endfor; ?>
+        <tr>
             <td>
-                <img class="phoneImage" src="<?= 'http://localhost/Test/' . $items[$i]['image_path'] ?>">
-            </td>
-            <td>
-                <?= $items[$i]['title'] ?><br>
-                <?= $items[$i]['description'] ?><br>
-                <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
-                <?= $myCart[$items[$i]['id']]?> <?= translate('products') ?><br>
+                <p>
+                    <?= translate('Name: ') ?>
+                    <?= translate($inputData['nameField']) ?>
+                </p>
             </td>
         </tr>
-        <br>
-    <?php endfor; ?>
-    <tr>
-        <td>
-            <p>
-                <?= translate('Name: ') ?>
-                <?= translate($inputData['nameField']) ?>
-            </p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>
-                <?= translate('Address: ') ?>
-                <?= translate($inputData['addressField']) ?>
-            </p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>
-                <?= translate('Comments: ') ?>
-                <?= translate($inputData['commentsField']) ?>
-            </p>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                <p>
+                    <?= translate('Address: ') ?>
+                    <?= translate($inputData['addressField']) ?>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    <?= translate('Comments: ') ?>
+                    <?= translate($inputData['commentsField']) ?>
+                </p>
+            </td>
+        </tr>
     </tbody>
 </table>
 </body>

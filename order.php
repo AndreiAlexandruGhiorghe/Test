@@ -34,58 +34,58 @@ $order = query(
     <title><?= translate('Cart Page') ?></title>
 </head>
 <body>
-<table id="contentTable">
-    <tbody>
-        <?php for ($i = 0; $i < count($order); $i++): ?>
-            <tr class="elementOfTable">
+    <table id="contentTable">
+        <tbody>
+            <?php for ($i = 0; $i < count($order); $i++): ?>
+                <tr class="elementOfTable">
+                    <td>
+                        <img
+                                class="phoneImage"
+                                src="<?= 'http://localhost/Test/' . $order[$i]['image_path'] ?>"
+                        >
+                    </td>
+                    <td>
+                        <?= $order[$i]['title'] ?><br>
+                        <?= $order[$i]['description'] ?><br>
+                        <?= $order[$i]['price'] ?> <?= translate('lei') ?><br>
+                        <?= $order[$i]['quantity'] ?> <?= translate('products') ?><br>
+                    </td>
+                </tr>
+                <br>
+            <?php endfor; ?>
+            <tr>
                 <td>
-                    <img
-                            class="phoneImage"
-                            src="<?= 'http://localhost/Test/' . $order[$i]['image_path'] ?>"
-                    >
-                </td>
-                <td>
-                    <?= $order[$i]['title'] ?><br>
-                    <?= $order[$i]['description'] ?><br>
-                    <?= $order[$i]['price'] ?> <?= translate('lei') ?><br>
-                    <?= $order[$i]['quantity'] ?> <?= translate('products') ?><br>
+                    <p>
+                        <?= translate('Creation date: ') ?>
+                        <?= isset($order[0]['creation_date']) ? $order[0]['creation_date'] : '' ?>
+                    </p>
                 </td>
             </tr>
-            <br>
-        <?php endfor; ?>
-        <tr>
-            <td>
-                <p>
-                    <?= translate('Creation date: ') ?>
-                    <?= isset($order[0]['creation_date']) ? $order[0]['creation_date'] : '' ?>
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p>
-                    <?= translate('Name: ') ?>
-                    <?= isset($order[0]['name']) ? $order[0]['name'] : '' ?>
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p>
-                    <?= translate('Address: ') ?>
-                    <?= isset($order[0]['address']) ? $order[0]['address'] : '' ?>
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p>
-                    <?= translate('Comments: ') ?>
-                    <?= isset($order[0]['comments']) ? $order[0]['comments'] : '' ?>
-                </p>
-            </td>
-        </tr>
-    </tbody>
-</table>
+            <tr>
+                <td>
+                    <p>
+                        <?= translate('Name: ') ?>
+                        <?= isset($order[0]['name']) ? $order[0]['name'] : '' ?>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <?= translate('Address: ') ?>
+                        <?= isset($order[0]['address']) ? $order[0]['address'] : '' ?>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <?= translate('Comments: ') ?>
+                        <?= isset($order[0]['comments']) ? $order[0]['comments'] : '' ?>
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
