@@ -61,15 +61,34 @@ if (isset($_POST['idProduct'])) {
         foreach (array_keys($myCart) as $idProduct) {
             $result = query(
                     $connection,
-                    'INSERT INTO order_products (id_order, id_product) VALUES (?, ?);',
+                    'INSERT INTO order_products (id_order, id_product, quantity) VALUES (?, ?, ?);',
                     [
                             $orderLastId,
                             $idProduct,
+                            $myCart[$idProduct]
                     ]
             );
         }
         // sending the mail
         mail($inputData['addressField'], 'Your Cart', $htmlPage, $headers);
+
+        // decreasing the number of products from database
+        $queryString = 'UPDATE products SET inventory = CASE ';
+        $params = [];
+        foreach ($myCart as $productId => $productQuantity) {
+            $queryString .= 'WHEN id = ? THEN inventory - ? ';
+            // adding the params at the param's array
+            $params[] = $productId;
+            $params[] = $productQuantity;
+        }
+        $queryString .= 'END WHERE id IN (' . implode(', ', array_fill(0, count($myCart), '?'))  . ');';
+        $params = array_merge($params, array_keys($myCart));
+
+        $result = query(
+            $connection,
+            $queryString,
+            $params
+        );
 
         // empty the cart
         $_SESSION['myCart'] = [];
@@ -103,6 +122,7 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
                 <?= $items[$i]['title'] ?><br>
                 <?= $items[$i]['description'] ?><br>
                 <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
+                <?= $myCart[$items[$i]['id']]?> <?= translate('products') ?><br>
             </td>
             <td>
                 <form method="post" action="cart.php">

@@ -17,7 +17,8 @@ $order = query(
             o_d.name,
             o_d.address,
             o_d.comments,
-            o_d.creation_date
+            o_d.creation_date,
+            o_p.quantity
      FROM order_products o_p
      JOIN products p ON o_p.id_product = p.id
      JOIN order_details o_d ON o_p.id_order = o_d.id
@@ -46,7 +47,8 @@ $order = query(
                 <td>
                     <?= $order[$i]['title'] ?><br>
                     <?= $order[$i]['description'] ?><br>
-                    <?= $order[$i]['price'] ?><?= translate('lei') ?><br>
+                    <?= $order[$i]['price'] ?> <?= translate('lei') ?><br>
+                    <?= $order[$i]['quantity'] ?> <?= translate('products') ?><br>
                 </td>
             </tr>
             <br>

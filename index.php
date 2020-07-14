@@ -18,11 +18,15 @@ if (
 ) {
     // add the valid id of the product to cart
     // the key is the id of the product and the value is the quantity
-    $myCart[intval($_POST['idProduct'])] = 1;
+    $myCart[intval($_POST['idProduct'])] = isset($myCart[intval($_POST['idProduct'])])
+                                                ? $myCart[intval($_POST['idProduct'])] + 1
+                                                : 1;
     $_SESSION['myCart'] = $myCart;
+    header('Location: index.php');
+    die();
 }
 
-$items = extractProducts($connection, $myCart, OUTSIDE_CART);
+$items = extractProducts($connection, $myCart, ALL_PRODUCTS);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -36,7 +40,10 @@ $items = extractProducts($connection, $myCart, OUTSIDE_CART);
 <table id="contentTable">
     <tbody>
     <?php for ($i = 0; $i < count($items); $i++): ?>
-        <tr class="elementOfTable">
+        <tr class="elementOfTable" style="<?= (
+                (isset($myCart[$items[$i]['id']]) && $items[$i]['inventory'] <= $myCart[$items[$i]['id']])
+                || $items[$i]['inventory'] ==0
+        ) ? 'display:none;' : ''?>">
             <td>
                 <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
             </td>
@@ -44,6 +51,8 @@ $items = extractProducts($connection, $myCart, OUTSIDE_CART);
                 <?= $items[$i]['title'] ?><br>
                 <?= $items[$i]['description'] ?><br>
                 <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
+                <?= $items[$i]['inventory'] - (isset($myCart[$items[$i]['id']]) ? $myCart[$items[$i]['id']] : 0) ?>
+                <?= translate('left') ?><br>
             </td>
             <td>
                 <form method="post" action="index.php">

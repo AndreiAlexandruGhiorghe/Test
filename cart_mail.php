@@ -40,6 +40,7 @@ $items = extractProducts($connection, $myCart, INSIDE_CART);
                 <?= $items[$i]['title'] ?><br>
                 <?= $items[$i]['description'] ?><br>
                 <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
+                <?= $myCart[$items[$i]['id']]?> <?= translate('products') ?><br>
             </td>
         </tr>
         <br>

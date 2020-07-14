@@ -57,27 +57,20 @@ function translate($string): string
 }
 
 // extractProducts it's used whenever I need to list products
-// from inside or outside the cart(index.php, cart.php)
+// from inside the cart or all products from db
 function extractProducts($connection, $myCart, $typeOfProduct): array
 {
-    if ($typeOfProduct == INSIDE_CART) {
+    if ($typeOfProduct == ALL_PRODUCTS) {
+        $items = query($connection, 'SELECT * FROM products');
+    } elseif ($typeOfProduct == INSIDE_CART) {
         $partOfTheQuery = 'SELECT * FROM products WHERE id IN ';
-    } elseif ($typeOfProduct == OUTSIDE_CART) {
-        $partOfTheQuery = 'SELECT * FROM products WHERE id NOT IN ';
-    }
+        // the query
+        if (count($myCart)) {
+            $queryString = $partOfTheQuery .
+                '(' .
+                implode(', ', array_fill(0, count($myCart), '?')) .
+                ');';
 
-    // the query
-    if (count($myCart)) {
-        $queryString = $partOfTheQuery .
-            '(' .
-            implode(', ', array_fill(0, count($myCart), '?')) .
-            ');';
-
-        $items = query($connection, $queryString, array_keys($myCart));
-    } else {
-        if ($typeOfProduct == OUTSIDE_CART) {
-            $queryString = 'SELECT * FROM products;';
-            // the interogation to database
             $items = query($connection, $queryString, array_keys($myCart));
         } else {
             // that means I need the products that are inside the cart

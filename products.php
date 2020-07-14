@@ -53,6 +53,7 @@ $items = query($connection, 'SELECT * FROM products;');
                         <?= $items[$i]['title'] ?><br>
                         <?= $items[$i]['description'] ?><br>
                         <?= $items[$i]['price'] ?> <?= translate('lei') ?><br>
+                        <?= $items[$i]['inventory'] ?> <?= translate('products') ?><br>
                     </td>
                     <td>
                         <a href="product.php?idProductEdit=<?= $items[$i]['id'] ?>">

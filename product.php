@@ -28,6 +28,9 @@ $inputData = [
     'imageNameField' => (isset($productDetails[0]['image_path']) && isset($idProductEdit))
                                 ? pathToName($productDetails[0]['image_path'])
                                 : '',
+    'inventoryField' => (isset($productDetails[0]['inventory']) && isset($idProductEdit))
+                                ? $productDetails[0]['inventory']
+                                : '',
 ];
 
 // the errors from the admin's input
@@ -52,6 +55,13 @@ if (isset($_POST['submitButton'])) {
             $inputError['priceFieldError'] = 'Please enter a natural number as price for product';
         }
     }
+    if (isset($_POST['inventoryField'])) {
+        $inputData['inventoryField'] = $_POST['inventoryField'];
+
+        if (!is_numeric($_POST['inventoryField']) || !intval($_POST['inventoryField'])) {
+            $inputError['inventoryFieldError'] = 'Please enter a positive integer number as number of products';
+        }
+    }
 
     // validate the files input
     if (isset($_FILES['fileField']) && $_FILES['fileField']['tmp_name']) {
@@ -70,12 +80,13 @@ if (isset($_POST['submitButton'])) {
             $imagePath = 'images/' . time() . $inputData['imageNameField'];
             $response = query(
                 $connection,
-                'INSERT INTO products (title, description, price, image_path) VALUES (?, ?, ?, ?)',
+                'INSERT INTO products (title, description, price, image_path) VALUES (?, ?, ?, ?, ?)',
                 [
                     $inputData['titleField'],
                     $inputData['descriptionField'],
                     intval($inputData['priceField']),
                     $imagePath,
+                    $inputData['inventoryField'],
                 ]
             );
             move_uploaded_file($inputData['imageLocation'], $imagePath);
@@ -84,16 +95,17 @@ if (isset($_POST['submitButton'])) {
         } else {
             // check if my actual image is the old image from db
             if (isset($productDetails[0]['image_path']) && $inputData['imageNameField'] == pathToName($productDetails[0]['image_path'])) {
-                $queryString = 'UPDATE products SET title = ?, description = ?, price = ? WHERE id = ?';
+                $queryString = 'UPDATE products SET title = ?, description = ?, price = ?, inventory = ? WHERE id = ?';
                 $paramQuery = [
                     $inputData['titleField'],
                     $inputData['descriptionField'],
                     intval($inputData['priceField']),
+                    $inputData['inventoryField'],
                     $idProductEdit,
                 ];
             } else {
                 $queryString = 'UPDATE products 
-                                SET title = ?, description = ?, price = ?, image_path = ? 
+                                SET title = ?, description = ?, price = ?, image_path = ?, inventory = ?
                                 WHERE id = ?';
                 $imagePath = 'images/' . time() . $inputData['imageNameField'];
                 $paramQuery = [
@@ -101,6 +113,7 @@ if (isset($_POST['submitButton'])) {
                     $inputData['descriptionField'],
                     intval($inputData['priceField']),
                     $imagePath,
+                    $inputData['inventoryField'],
                     $idProductEdit,
                 ];
             }
@@ -188,6 +201,21 @@ if (isset($_POST['submitButton'])) {
                         <span class="errorField">
                             <?= isset($inputError['priceFieldError'])
                                 ? translate($inputError['priceFieldError'])
+                                : '' ?>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input
+                                type="text"
+                                name="inventoryField"
+                                placeholder="<?= translate('In stock') ?>"
+                                value="<?= $inputData['inventoryField'] ?>"
+                        >
+                        <span class="errorField">
+                            <?= isset($inputError['inventoryFieldError'])
+                                ? translate($inputError['inventoryFieldError'])
                                 : '' ?>
                         </span>
                     </td>
