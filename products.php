@@ -24,10 +24,12 @@ if (isset($_POST['deleteItem'])) {
         'DELETE FROM products WHERE id = ?',
         [$_POST['idProductDelete']]
     );
+
     // deleting the image from directory with checking
     if (isset($result[0]['image_path']) && file_exists($result[0]['image_path'])) {
         unlink($result[0]['image_path']);
     }
+
     header('Location: products.php');
     die();
 }

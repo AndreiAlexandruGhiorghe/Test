@@ -43,11 +43,13 @@ if (isset($_POST['submitButton'])) {
     } else {
         $inputError['titleFieldError'] = 'Please enter a title for product';
     }
+
     if (isset($_POST['descriptionField']) && $_POST['descriptionField']) {
         $inputData['descriptionField'] = $_POST['descriptionField'];
     } else {
         $inputError['descriptionFieldError'] = 'Please enter a description for product';
     }
+
     if (isset($_POST['priceField'])) {
         $inputData['priceField'] = $_POST['priceField'];
 
@@ -55,6 +57,7 @@ if (isset($_POST['submitButton'])) {
             $inputError['priceFieldError'] = 'Please enter a natural number as price for product';
         }
     }
+
     if (isset($_POST['inventoryField'])) {
         $inputData['inventoryField'] = $_POST['inventoryField'];
 
@@ -133,6 +136,7 @@ if (isset($_POST['submitButton'])) {
                     unlink($productDetails[0]['image_path']);
                 }
             }
+
             header('Location: products.php');
             die();
         }

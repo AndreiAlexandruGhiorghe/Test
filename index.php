@@ -23,11 +23,12 @@ if (
         ? $myCart[intval($_POST['idProduct'])] + 1
         : 1;
     $_SESSION['myCart'] = $myCart;
+
     header('Location: index.php');
     die();
 }
 
-$items = extractProducts($connection, $myCart, ALL_PRODUCTS);
+$items = extractProducts($connection, $myCart, OUTSIDE_CART);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -41,10 +42,7 @@ $items = extractProducts($connection, $myCart, ALL_PRODUCTS);
 <table id="contentTable">
     <tbody>
         <?php for ($i = 0; $i < count($items); $i++): ?>
-            <tr class="elementOfTable" style="<?= (
-                    (isset($myCart[$items[$i]['id']]) && $items[$i]['inventory'] <= $myCart[$items[$i]['id']])
-                    || $items[$i]['inventory'] ==0
-            ) ? 'display:none;' : ''?>">
+            <tr class="elementOfTable">
                 <td>
                     <img class="phoneImage" src="<?= $items[$i]['image_path'] ?>">
                 </td>

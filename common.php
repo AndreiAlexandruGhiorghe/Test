@@ -63,11 +63,9 @@ function extractProducts($connection, $myCart, $typeOfProduct): array
     if ($typeOfProduct == ALL_PRODUCTS) {
         $items = query($connection, 'SELECT * FROM products');
     } elseif ($typeOfProduct == INSIDE_CART) {
-        $partOfTheQuery = 'SELECT * FROM products WHERE id IN ';
         // the query
         if (count($myCart)) {
-            $queryString = $partOfTheQuery .
-                '(' .
+            $queryString = 'SELECT * FROM products WHERE id IN (' .
                 implode(', ', array_fill(0, count($myCart), '?')) .
                 ');';
 
@@ -76,6 +74,29 @@ function extractProducts($connection, $myCart, $typeOfProduct): array
             // that means I need the products that are inside the cart
             // no items I need
             $items = [];
+        }
+    } elseif ($typeOfProduct == OUTSIDE_CART) {
+        // the query
+        if (count($myCart)) {
+            $queryString = 'SELECT * FROM products WHERE id NOT IN (' .
+                implode(', ', array_fill(0, count($myCart), '?')) .
+                ')';
+
+            $params = array_keys($myCart);
+
+            $queryString .= ' OR inventory > CASE ';
+            foreach ($myCart as $idProduct => $quantity) {
+                $queryString .= 'WHEN id = ? THEN ? ';
+                $params[] = $idProduct;
+                $params[] = $quantity;
+            }
+            $queryString .= ' END;';
+
+            $items = query($connection, $queryString, $params);
+        } else {
+            // that means I need the products that are inside the cart
+            // no items I need
+            $items = query($connection, 'SELECT * FROM products WHERE inventory > 0;');
         }
     }
 

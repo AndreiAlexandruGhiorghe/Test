@@ -18,11 +18,13 @@ if (isset($_POST['submitButton'])) {
     } else {
         $inputErrors['usernameFieldError'] = 'Enter a username';
     }
+
     if ($_POST['passwordField']) {
         $inputData['passwordField'] = strip_tags($_POST['passwordField']);
     } else {
         $inputErrors['passwordFieldError'] = 'Enter a password';
     }
+
     if (!count($inputErrors)) {
         if (
                 $inputData['usernameField'] == ADMIN_CREDENTIALS['USERNAME']
@@ -53,7 +55,9 @@ if (isset($_POST['submitButton'])) {
                 value="<?= isset($inputData['usernameField']) ? $inputData['usernameField'] : '' ?>"
         >
         <span class="errorField">
-            <?= isset($inputErrors['usernameFieldError']) ? '* ' . translate($inputErrors['usernameFieldError']) : '' ?>
+            <?= isset($inputErrors['usernameFieldError'])
+                ? '* ' . translate($inputErrors['usernameFieldError'])
+                : '' ?>
         </span>
         <br>
         <input
@@ -64,12 +68,16 @@ if (isset($_POST['submitButton'])) {
                 value="<?= isset($inputData['passwordField']) ? $inputData['passwordField'] : '' ?>"
         >
         <span class="errorField">
-            <?= isset($inputErrors['passwordFieldError']) ? '* ' . translate($inputErrors['passwordFieldError']) : '' ?>
+            <?= isset($inputErrors['passwordFieldError'])
+                ? '* ' . translate($inputErrors['passwordFieldError'])
+                : '' ?>
         </span>
         <br>
         <input type="submit" class="inputTypeLogin" name="submitButton" value="<?= translate('Login') ?>">
         <span class="errorField">
-            <?= isset($inputErrors['loginFailedMessage']) ? '* ' . translate($inputErrors['loginFailedMessage']) : '' ?>
+            <?= isset($inputErrors['loginFailedMessage'])
+                ? '* ' . translate($inputErrors['loginFailedMessage'])
+                : '' ?>
         </span>
     </form>
 </body>

@@ -7,5 +7,6 @@ define('TRANSLATION_FILE', 'the name of the json file that has the translation w
 define('SENDER_ADDRESS', 'shop_manager@yahoo.com');
 define('DUMMY_DATA', 'something');
 define('INSIDE_CART', 'inside the cart');
+define('OUTSIDE_CART', 'outside the cart');
 define('ALL_PRODUCTS', 'all products');
 define('ADMIN_CREDENTIALS', ['USERNAME' => 'admin username', 'PASSWORD' => 'admin password']);
